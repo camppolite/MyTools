@@ -8,29 +8,16 @@ actMon = open("系统应缴费用.txt")
 sys_dict = {}
 act_dict = {}
 
-# sys_dict
-sysNo_ls = []
-sysMon_ls = []
-# 读取数据并保存为list
-for no in sysNo.readlines():
-    sysNo_ls.append(no.replace("\n", ""))
-for mon in sysMon.readlines():
-    sysMon_ls.append(mon.replace("\n", ""))
+# sys_dict 读取数据并保存为list
+sysNo_ls = [no.replace("\n", "") for no in sysNo.readlines()]
+sysMon_ls = [mon.replace("\n", "") for mon in sysMon.readlines()]
 # 将数据构造为字典
-# for i in range(len(sysNo_ls)):
-#     sys_dict[sysNo_ls[i]] = sysMon_ls[i]
 sys_dict = dict(zip(sysNo_ls, sysMon_ls))
-# act_dict
-actNo_ls = []
-actMon_ls = []
-# 读取数据并保存为list
-for no in actNo.readlines():
-    actNo_ls.append(no.replace("\n", ""))
-for mon in actMon.readlines():
-    actMon_ls.append(mon.replace("\n", ""))
+
+# act_dict 读取数据并保存为list
+actNo_ls = [no.replace("\n", "") for no in actNo.readlines()]
+actMon_ls = [mon.replace("\n", "") for mon in actMon.readlines()]
 # 将数据构造为字典
-# for i in range(len(actNo_ls)):
-#     act_dict[actNo_ls[i]] = actMon_ls[i]
 act_dict = dict(zip(actNo_ls, actMon_ls))
 
 # 实际缴费名单不在系统名单内
