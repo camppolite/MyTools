@@ -1,0 +1,475 @@
+# -*- coding: utf-8 -*-
+
+__author__ = 'Wu Dirui, camp'
+__version__ = "0.1"
+
+import pyautogui
+
+
+class PyAutoGUILibrary:
+    """
+    本模块只是引用PyAutoGUI模块，将它封装成中文版的接口，方便不熟悉英文的用户使用。
+
+    PyAutoGUI是一个面向人类的跨平台GUI自动化Python模块。用于以编程方式控制鼠标和键盘。
+
+    PyAutoGUI官网地址：https://pyautogui.readthedocs.io/en/latest/
+
+    PyAutoGUI源码地址：https://github.com/asweigart/pyautogui
+
+    安装本模块的顺序是：
+
+    1.安装PyAutoIt:
+
+    pip install pyautogui
+
+    2.PyAutoGUILibrary(PyAutoGUILibrary.py文件拷贝到Python\Lib\site-packages目录里)。
+    """
+    ROBOT_LIBRARY_SCOPE = "GLOBAL"
+
+    def __init__(self):
+        pass
+
+    # General Functions
+    def position(self, x=None, y=None):
+        """Returns the current xy coordinates of the mouse cursor as a two-integer
+        tuple.
+
+        Args:
+          x (int, None, optional) - If not None, this argument overrides the x in
+            the return value.
+          y (int, None, optional) - If not None, this argument overrides the y in
+            the return value.
+
+        Returns:
+          (x, y) tuple of the current xy coordinates of the mouse cursor.
+        """
+        return pyautogui.position(x, y)
+
+    def size(self):
+        """Returns the width and height of the screen as a two-integer tuple.
+
+        Returns:
+          (width, height) tuple of the screen size, in pixels.
+        """
+        return pyautogui.size()
+
+    # Mouse Control Functions
+    # The Screen and Mouse Position
+    def onScreen(self, x, y=None):
+        """Returns whether the given xy coordinates are on the screen or not.
+
+        Args:
+          Either the arguments are two separate values, first arg for x and second
+            for y, or there is a single argument of a sequence with two values, the
+            first x and the second y.
+            Example: onScreen(x, y) or onScreen([x, y])
+
+        Returns:
+          bool: True if the xy coordinates are on the screen at its current
+            resolution, otherwise False.
+        """
+        return pyautogui.onScreen(x, y)
+
+    # Mouse Movement
+    def moveTo(self, x=None, y=None, duration=0.0, tween=pyautogui.linear, pause=None, _pause=True):
+        """Moves the mouse cursor to a point on the screen.
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
+        Args:
+          x (int, float, None, tuple, optional): The x position on the screen where the
+            click happens. None by default. If tuple, this is used for x and y.
+          y (int, float, None, optional): The y position on the screen where the
+            click happens. None by default.
+          duration (float, optional): The amount of time it takes to move the mouse
+            cursor to the xy coordinates. If 0, then the mouse cursor is moved
+            instantaneously. 0.0 by default.
+          tween (func, optional): The tweening function used if the duration is not
+            0. A linear tween is used by default. See the tweens.py file for
+            details.
+
+        Returns:
+          None
+        """
+        return pyautogui.moveTo(x, y, duration, tween, pause, _pause)
+
+    def moveRel(self, xOffset=None, yOffset=None, duration=0.0, tween=pyautogui.linear, pause=None, _pause=True):
+        """Moves the mouse cursor to a point on the screen, relative to its current
+            position.
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              x (int, float, None, tuple, optional): How far left (for negative values) or
+                right (for positive values) to move the cursor. 0 by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): How far up (for negative values) or
+                down (for positive values) to move the cursor. 0 by default.
+              duration (float, optional): The amount of time it takes to move the mouse
+                cursor to the new xy coordinates. If 0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
+              tween (func, optional): The tweening function used if the duration is not
+                0. A linear tween is used by default. See the tweens.py file for
+                details.
+
+            Returns:
+              None
+            """
+        return pyautogui.moveRel(xOffset, yOffset, duration, tween, pause, _pause)
+
+    # Mouse Drags
+    def dragTo(self, x=None, y=None, duration=0.0, tween=pyautogui.linear, button='left', pause=None, _pause=True,
+               mouseDownUp=True):
+        """Performs a mouse drag (mouse movement while a button is held down) to a
+            point on the screen.
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              x (int, float, None, tuple, optional): How far left (for negative values) or
+                right (for positive values) to move the cursor. 0 by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): How far up (for negative values) or
+                down (for positive values) to move the cursor. 0 by default.
+              duration (float, optional): The amount of time it takes to move the mouse
+                cursor to the new xy coordinates. If 0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
+              tween (func, optional): The tweening function used if the duration is not
+                0. A linear tween is used by default. See the tweens.py file for
+                details.
+              button (str, int, optional): The mouse button clicked. Must be one of
+                'left', 'middle', 'right' (or 1, 2, or 3) respectively. 'left' by
+                default.
+              mouseDownUp (True, False): When true, the mouseUp/Down actions are not perfomed.
+                Which allows dragging over multiple (small) actions. 'True' by default.
+
+            Returns:
+              None
+            """
+        return pyautogui.dragTo(x, y, duration, tween, button, pause, _pause, mouseDownUp)
+
+    def dragRel(self, xOffset=0, yOffset=0, duration=0.0, tween=pyautogui.linear, button='left', pause=None,
+                _pause=True, mouseDownUp=True):
+        """Performs a mouse drag (mouse movement while a button is held down) to a
+            point on the screen, relative to its current position.
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              x (int, float, None, tuple, optional): How far left (for negative values) or
+                right (for positive values) to move the cursor. 0 by default. If tuple, this is used for xOffset and yOffset.
+              y (int, float, None, optional): How far up (for negative values) or
+                down (for positive values) to move the cursor. 0 by default.
+              duration (float, optional): The amount of time it takes to move the mouse
+                cursor to the new xy coordinates. If 0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
+              tween (func, optional): The tweening function used if the duration is not
+                0. A linear tween is used by default. See the tweens.py file for
+                details.
+              button (str, int, optional): The mouse button clicked. Must be one of
+                'left', 'middle', 'right' (or 1, 2, or 3) respectively. 'left' by
+                default.
+              mouseDownUp (True, False): When true, the mouseUp/Down actions are not perfomed.
+                Which allows dragging over multiple (small) actions. 'True' by default.
+
+            Returns:
+              None
+            """
+        return pyautogui.dragRel(xOffset, yOffset, duration, tween, button, pause, _pause, mouseDownUp)
+
+    # Mouse Clicks
+    def click(self, x=None, y=None, clicks=1, interval=0.0, button='left', duration=0.0, tween=pyautogui.linear,
+              pause=None, _pause=True):
+        """Performs pressing a mouse button down and then immediately releasing it.
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              x (int, float, None, tuple, optional): The x position on the screen where
+                the click happens. None by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): The y position on the screen where the
+                click happens. None by default.
+              clicks (int, optional): The number of clicks to perform. 1 by default.
+                For example, passing 2 would do a doubleclick.
+              interval (float, optional): The number of seconds in between each click,
+                if the number of clicks is greater than 1. 0.0 by default, for no
+                pause in between clicks.
+              button (str, int, optional): The mouse button clicked. Must be one of
+                'left', 'middle', 'right' (or 1, 2, or 3) respectively. 'left' by
+                default.
+
+            Returns:
+              None
+
+            Raises:
+              ValueError: If button is not one of 'left', 'middle', 'right', 1, 2, 3
+            """
+        return pyautogui.click(x, y, clicks, interval, button, duration, tween, pause, _pause)
+
+    def doubleClick(self, x=None, y=None, interval=0.0, button='left', duration=0.0, tween=pyautogui.linear,
+                    pause=None, _pause=True):
+        """Performs a double click.
+
+            This is a wrapper function for click('left', x, y, 2, interval).
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              x (int, float, None, tuple, optional): The x position on the screen where the
+                click happens. None by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): The y position on the screen where the
+                click happens. None by default.
+              interval (float, optional): The number of seconds in between each click,
+                if the number of clicks is greater than 1. 0.0 by default, for no
+                pause in between clicks.
+              button (str, int, optional): The mouse button clicked. Must be one of
+                'left', 'middle', 'right' (or 1, 2, or 3) respectively. 'left' by
+                default.
+
+            Returns:
+              None
+
+            Raises:
+              ValueError: If button is not one of 'left', 'middle', 'right', 1, 2, 3, 4,
+                5, 6, or 7
+            """
+        return pyautogui.doubleClick(x, y, interval, button, duration, tween, pause, _pause)
+
+    # The mouseDown() and mouseUp() Functions
+    def mouseDown(self, x=None, y=None, button='left', duration=0.0, tween=pyautogui.linear, pause=None, _pause=True):
+        """Performs pressing a mouse button down (but not up).
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              x (int, float, None, tuple, optional): The x position on the screen where the
+                mouse down happens. None by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): The y position on the screen where the
+                mouse down happens. None by default.
+              button (str, int, optional): The mouse button pressed down. Must be one of
+                'left', 'middle', 'right' (or 1, 2, or 3) respectively. 'left' by
+                default.
+
+            Returns:
+              None
+
+            Raises:
+              ValueError: If button is not one of 'left', 'middle', 'right', 1, 2, or 3
+            """
+        return pyautogui.mouseDown(x, y, button, duration, tween, pause, _pause)
+
+    def mouseUp(self, x=None, y=None, button='left', duration=0.0, tween=pyautogui.linear, pause=None, _pause=True):
+        """Performs releasing a mouse button up (but not down beforehand).
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
+        Args:
+          x (int, float, None, tuple, optional): The x position on the screen where the
+            mouse up happens. None by default. If tuple, this is used for x and y.
+          y (int, float, None, optional): The y position on the screen where the
+            mouse up happens. None by default.
+          button (str, int, optional): The mouse button released. Must be one of
+            'left', 'middle', 'right' (or 1, 2, or 3) respectively. 'left' by
+            default.
+
+        Returns:
+          None
+
+        Raises:
+          ValueError: If button is not one of 'left', 'middle', 'right', 1, 2, or 3
+        """
+        return pyautogui.mouseUp(x, y, button, duration, tween, pause, _pause)
+
+    # Mouse Scrolling
+    def scroll(self, clicks, x=None, y=None, pause=None, _pause=True):
+        """Performs a scroll of the mouse scroll wheel.
+
+            Whether this is a vertical or horizontal scroll depends on the underlying
+            operating system.
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              clicks (int, float): The amount of scrolling to perform.
+              x (int, float, None, tuple, optional): The x position on the screen where the
+                click happens. None by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): The y position on the screen where the
+                click happens. None by default.
+
+            Returns:
+              None
+            """
+        return  pyautogui.scroll(clicks, x, y, pause, _pause)
+
+    def hscroll(self, clicks, x=None, y=None, pause=None, _pause=True):
+        """Performs an explicitly horizontal scroll of the mouse scroll wheel,
+            if this is supported by the operating system. (Currently just Linux.)
+
+            The x and y parameters detail where the mouse event happens. If None, the
+            current mouse position is used. If a float value, it is rounded down. If
+            outside the boundaries of the screen, the event happens at edge of the
+            screen.
+
+            Args:
+              clicks (int, float): The amount of scrolling to perform.
+              x (int, float, None, tuple, optional): The x position on the screen where the
+                click happens. None by default. If tuple, this is used for x and y.
+              y (int, float, None, optional): The y position on the screen where the
+                click happens. None by default.
+
+            Returns:
+              None
+            """
+        return pyautogui.hscroll(clicks, x, y, pause, _pause)
+
+    # Keyboard Control Functions
+    # The typewrite() Function
+    def typewrite(self, message, interval=0.0, pause=None, _pause=True):
+        """Performs a keyboard key press down, followed by a release, for each of
+            the characters in message.
+
+            The message argument can also be list of strings, in which case any valid
+            keyboard name can be used.
+
+            Since this performs a sequence of keyboard presses and does not hold down
+            keys, it cannot be used to perform keyboard shortcuts. Use the hotkey()
+            function for that.
+
+            Args:
+              message (str, list): If a string, then the characters to be pressed. If a
+                list, then the key names of the keys to press in order. The valid names
+                are listed in KEYBOARD_KEYS.
+              interval (float, optional): The number of seconds in between each press.
+                0.0 by default, for no pause in between presses.
+
+            Returns:
+              None
+            """
+        return pyautogui.typewrite(message, interval, pause, _pause)
+
+    # The press(), keyDown(), and keyUp() Functions
+    def press(self, keys, presses=1, interval=0.0, pause=None, _pause=True):
+        """Performs a keyboard key press down, followed by a release.
+
+            Args:
+              key (str, list): The key to be pressed. The valid names are listed in
+              KEYBOARD_KEYS. Can also be a list of such strings.
+              presses (integer, optiional): the number of press repetition
+              1 by default, for just one press
+              interval (float, optional): How many seconds between each press.
+              0.0 by default, for no pause between presses.
+              pause (float, optional): How many seconds in the end of function process.
+              None by default, for no pause in the end of function process.
+            Returns:
+              None
+
+
+
+            KEYBOARD_KEYS:
+
+            ['\t', '\n', '\r', ' ', '!', '"', '#', '$', '%', '&', "'", '(',
+            ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7',
+            '8', '9', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`',
+            'a', 'b', 'c', 'd', 'e','f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+            'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~',
+            'accept', 'add', 'alt', 'altleft', 'altright', 'apps', 'backspace',
+            'browserback', 'browserfavorites', 'browserforward', 'browserhome',
+            'browserrefresh', 'browsersearch', 'browserstop', 'capslock', 'clear',
+            'convert', 'ctrl', 'ctrlleft', 'ctrlright', 'decimal', 'del', 'delete',
+            'divide', 'down', 'end', 'enter', 'esc', 'escape', 'execute', 'f1', 'f10',
+            'f11', 'f12', 'f13', 'f14', 'f15', 'f16', 'f17', 'f18', 'f19', 'f2', 'f20',
+            'f21', 'f22', 'f23', 'f24', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9',
+            'final', 'fn', 'hanguel', 'hangul', 'hanja', 'help', 'home', 'insert', 'junja',
+            'kana', 'kanji', 'launchapp1', 'launchapp2', 'launchmail',
+            'launchmediaselect', 'left', 'modechange', 'multiply', 'nexttrack',
+            'nonconvert', 'num0', 'num1', 'num2', 'num3', 'num4', 'num5', 'num6',
+            'num7', 'num8', 'num9', 'numlock', 'pagedown', 'pageup', 'pause', 'pgdn',
+            'pgup', 'playpause', 'prevtrack', 'print', 'printscreen', 'prntscrn',
+            'prtsc', 'prtscr', 'return', 'right', 'scrolllock', 'select', 'separator',
+            'shift', 'shiftleft', 'shiftright', 'sleep', 'space', 'stop', 'subtract', 'tab',
+            'up', 'volumedown', 'volumemute', 'volumeup', 'win', 'winleft', 'winright', 'yen',
+            'command', 'option', 'optionleft', 'optionright']
+            """
+        return pyautogui.press(keys, presses, interval, pause, _pause)
+
+    def keyDown(self, key, pause=None, _pause=True):
+        """Performs a keyboard key press without the release. This will put that
+            key in a held down state.
+
+            NOTE: For some reason, this does not seem to cause key repeats like would
+            happen if a keyboard key was held down on a text field.
+
+            Args:
+              key (str): The key to be pressed down. The valid names are listed in
+              KEYBOARD_KEYS.
+
+            Returns:
+              None
+            """
+        return pyautogui.keyDown(key, pause, _pause)
+
+    def keyUp(self, key, pause=None, _pause=True):
+        """Performs a keyboard key release (without the press down beforehand).
+
+            Args:
+              key (str): The key to be released up. The valid names are listed in
+              KEYBOARD_KEYS.
+
+            Returns:
+              None
+            """
+        return pyautogui.keyUp(key, pause, _pause)
+
+    # The hotkey() Function
+    def hotkey(self, *args, **kwargs):
+        """Performs key down presses on the arguments passed in order, then performs
+            key releases in reverse order.
+
+            The effect is that calling hotkey('ctrl', 'shift', 'c') would perform a
+            "Ctrl-Shift-C" hotkey/keyboard shortcut press.
+
+            Args:
+              key(s) (str): The series of keys to press, in order. This can also be a
+                list of key strings to press.
+              interval (float, optional): The number of seconds in between each press.
+                0.0 by default, for no pause in between presses.
+
+            Returns:
+              None
+            """
+        _interval = float(kwargs.get('interval', 0.0))
+        pause, _pause = kwargs.get('pause', None), kwargs.get('_pause', True)
+
+        return pyautogui.hotkey(_interval, pause, _pause)
+
+
+    # Message Box Functions
+    # The alert() Function
+    def alert(self):
+
+        return pyautogui.alert()
