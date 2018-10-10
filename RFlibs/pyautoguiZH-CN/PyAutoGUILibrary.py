@@ -3,12 +3,15 @@
 __author__ = 'Wu Dirui, camp'
 __version__ = "0.1"
 
-import pyautogui
+try:
+    import pyautogui
+except ImportError as err:
+    print(err + "导入pyautogui失败，请先安装该模块：pip install pyautogui")
 
 
 class PyAutoGUILibrary:
     """
-    本模块只是引用PyAutoGUI模块，将它封装成中文版的接口，方便不熟悉英文的用户使用。
+    本模块只是引用PyAutoGUI模块，将它封装成中文版的接口（目前英文），方便不熟悉英文的用户使用。
 
     PyAutoGUI是一个面向人类的跨平台GUI自动化Python模块。用于以编程方式控制鼠标和键盘。
 
@@ -22,7 +25,7 @@ class PyAutoGUILibrary:
 
     pip install pyautogui
 
-    2.PyAutoGUILibrary(PyAutoGUILibrary.py文件拷贝到Python\Lib\site-packages目录里)。
+    2.PyAutoGUILibrary(PyAutoGUILibrary.py文件拷贝到Python\Lib\site-packages目录里，或者拷贝到其他任意PYTHONPATH)。
     """
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
@@ -470,6 +473,173 @@ class PyAutoGUILibrary:
 
     # Message Box Functions
     # The alert() Function
-    def alert(self):
+    from pyautogui import pymsgbox
 
-        return pyautogui.alert()
+    def alert(self, text='', title='', button=pymsgbox.OK_TEXT, root=None, timeout=None):
+        """Displays a simple message box with text and a single OK button. Returns the text of the button clicked on."""
+        return pyautogui.alert(text, title, button, root, timeout)
+
+    def confirm(self, text='', title='', buttons=[pymsgbox.OK_TEXT, pymsgbox.CANCEL_TEXT], root=None, timeout=None):
+        """Displays a message box with OK and Cancel buttons. Number and text of buttons can be customized.
+         Returns the text of the button clicked on."""
+        return pyautogui.confirm(text, title, buttons, root, timeout)
+
+    def prompt(self, text='', title='' , default='', root=None, timeout=None):
+        """Displays a message box with text input, and OK & Cancel buttons. Returns the text entered,
+         or None if Cancel was clicked."""
+        return pyautogui.prompt(text, title, default, root, timeout)
+
+    def password(self, text='', title='', default='', mask='*', root=None, timeout=None):
+        """Displays a message box with text input, and OK & Cancel buttons. Typed characters appear as *.
+         Returns the text entered, or None if Cancel was clicked."""
+        return pyautogui.password(text, title, default, mask, root, timeout)
+
+    # Screenshot Functions
+    def screenshot(self, *args):
+        """
+        Calling screenshot() will return an Image object (see the Pillow or PIL module documentation for details). Passing a string of a filename will save the screenshot to a file as well as return it as an Image object.
+
+        >>> import pyautogui
+        >>> im1 = pyautogui.screenshot()
+        >>> im2 = pyautogui.screenshot('my_screenshot.png')
+        On a 1920 x 1080 screen, the screenshot() function takes roughly 100 milliseconds - it’s not fast but it’s not slow.
+
+        There is also an optional region keyword argument, if you do not want a screenshot of the entire screen. You can pass a four-integer tuple of the left, top, width, and height of the region to capture:
+
+        >>> import pyautogui
+        >>> im = pyautogui.screenshot(region=(0,0, 300, 400))
+        """
+        sshot = pyautogui.screenshot(args)
+
+        def getpixel(xy):
+            """
+            Returns the pixel value at a given position.
+
+            :param xy: The coordinate, given as (x, y). See
+               :ref:`coordinate-system`.
+            :returns: The pixel value.  If the image is a multi-layer image,
+               this method returns a tuple.
+            """
+            return sshot.getpixel(xy)
+
+        return sshot
+
+    def locateOnScreen(self, image, minSearchTime=0, **kwargs):
+        """minSearchTime - amount of time in seconds to repeat taking
+            screenshots and trying to locate a match.  The default of 0 performs
+            a single search.
+        """
+        return pyautogui.locateOnScreen(image, minSearchTime, **kwargs)
+
+    def center(self, coords):
+        """
+        . . . you can call the locateOnScreen('calc7key.png') function to get the screen coordinates. The return value is a 4-integer tuple: (left, top, width, height). This tuple can be passed to center() to get the X and Y coordinates at the center of this region. If the image can’t be found on the screen, locateOnScreen() returns None.
+
+        >>> import pyautogui
+        >>> button7location = pyautogui.locateOnScreen('calc7key.png')
+        >>> button7location
+        (1416, 562, 50, 41)
+        >>> button7x, button7y = pyautogui.center(button7location)
+        >>> button7x, button7y
+        (1441, 582)
+        >>> pyautogui.click(button7x, button7y)  # clicks the center of where the 7 button was found
+        """
+        return pyautogui.center(coords)
+
+    def locateCenterOnScreen(self, image, **kwargs):
+        """
+        Returns (x, y) coordinates of the center of the first found instance of the image on the screen.
+         Returns None if not found on the screen.
+        """
+        return pyautogui.locateCenterOnScreen(image, **kwargs)
+
+    def locateAllOnScreen(self, image, **kwargs):
+        """
+        Returns a generator that yields (left, top, width, height) tuples for where the image is found on the screen.
+        """
+        return pyautogui.locateAllOnScreen(image, **kwargs)
+
+    def locate(self, needleImage, haystackImage, **kwargs):
+        """
+        Returns (left, top, width, height) coordinate of first found instance of needleImage in haystackImage.
+         Returns None if not found on the screen.
+        """
+        return pyautogui.locate(needleImage, haystackImage, **kwargs)
+
+    def locateAll(self, *args):
+        """
+        Returns a generator that yields (left, top, width, height) tuples for where needleImage is found in haystackImage.
+        """
+        return pyautogui.locateAll(*args)
+
+    def pixel(self, x, y):
+        """
+        Or as a single function, call the pixel() PyAutoGUI function, which is a wrapper for the previous calls
+        """
+        return pyautogui.pixel(x, y)
+
+    def pixelMatchesColor(self, x, y, expectedRGBColor, tolerance=0):
+        """
+        If you just need to verify that a single pixel matches a given pixel, call the pixelMatchesColor() function,
+        passing it the X coordinate, Y coordinate, and RGB tuple of the color it represents
+        """
+        return pyautogui.pixelMatchesColor(x, y, expectedRGBColor, tolerance)
+
+    def getWindows(self):
+        """
+        returns a dict of window titles mapped to window IDs
+        """
+        return pyautogui.getWindows()
+
+    def getWindow(self, str_title_or_int_id, exact=False):
+        """
+        returns a “Win” object
+
+        win.move(x, y)
+        win.resize(width, height)
+        win.maximize()
+        win.minimize()
+        win.restore()
+        win.close()
+        win.position() # returns (x, y) of top-left corner
+        win.moveRel(x=0, y=0) # moves relative to the x, y of top-left corner of the window
+        win.clickRel(x=0, y=0, clicks=1, interval=0.0, button=’left’) # click relative to the x, y of top-left corner of the window
+        Additions to screenshot functionality so that it can capture specific windows instead of full screen.
+        """
+        # Flags for ShowWindow:
+        SW_MAXIMIZE = 3
+        SW_MINIMIZE = 6
+        SW_RESTORE = 9
+        win = pyautogui.getWindow(str_title_or_int_id, exact)
+        def move(x, y):
+            """Move window top-left corner to position"""
+            return win.move(x, y)
+
+        def resize(width, height):
+            """Change window size"""
+            return win.resize(width, height)
+
+        def maximize():
+            return win.maximize(win._hwnd, SW_MAXIMIZE)
+
+        def minimize():
+            return win.minimize(win._hwnd, SW_MINIMIZE)
+
+        def restore():
+            return win.restore(win._hwnd, SW_RESTORE)
+
+        def close():
+            return win.close(win._hwnd)
+
+        def get_position():
+            """Returns tuple of 4 numbers: (x, y)s of top-left and bottom-right corners"""
+            return win.get_position()
+
+        def set_position(x, y, width, height):
+            """Set window top-left corner position and size"""
+            return win.set_position(x, y, width, height)
+
+        def set_foreground():
+            return win.set_foreground(win._hwnd)
+
+        return win
