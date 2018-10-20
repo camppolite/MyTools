@@ -20,7 +20,7 @@
     ball: pong_ball
     player1: player_left
     player2: player_right
-    start: start_game
+    startg: start_game
     restart: restart_game
 
     canvas:
@@ -55,16 +55,18 @@
         x: root.width-self.width
         center_y: root.center_y
         
-    StartGame:
+    Button:
         id: start_game
-        font_size: 50
+        font_size: 25
         center_x: root.width * 2 / 4
-        top: root.top - 15
-        text: 'Start'
+        top: root.top
+        height: 25
+        text: root.stext
 
-    RestartGame:
+    Button:
         id: restart_game
-        font_size: 50
+        font_size: 25
         center_x: root.width * 2 / 4
-        top: root.top - 75
-        text: 'Restart'
+        top: root.top - 25
+        height: 25
+        text: root.rstext

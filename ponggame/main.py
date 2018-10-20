@@ -1,44 +1,16 @@
-# -*- coding: utf-8 -*-
+# !/usr/bin/python
+#  -*- coding: utf-8 -*-
 
 import kivy
 kivy.require('1.10.1')
-
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.uix.button import Button
+from kivy.uix.label import Label
 from kivy.properties import NumericProperty, ReferenceListProperty,\
-    ObjectProperty
+    ObjectProperty, StringProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
-from kivy.uix.behaviors import ButtonBehavior
 from kivy.event import EventDispatcher
-import os
-
-
-class StartGame(Button):
-    st = NumericProperty(0)
-    #
-    # def __init__(self, **kwargs):
-    #     super(StartGame, self).__init__(**kwargs)
-    #     self.start = 0
-    print(st)
-    def on_press(self):
-        self.text = 'Pause'
-        self.st = 1
-        print(self.st)
-
-
-class RestartGame(Button, EventDispatcher):
-    rs = NumericProperty(0)
-
-    # def __init__(self, **kwargs):
-    #     super(RestartGame, self).__init__(**kwargs)
-    #     self.restart = 0
-    print(rs)
-    def on_press(self):
-        self.text = 'Restart'
-        self.rs += 1
-        print(self.rs)
 
 
 class PongPaddle(Widget):
@@ -49,7 +21,7 @@ class PongPaddle(Widget):
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
             bounced = Vector(-1 * vx, vy)
-            vel = bounced * 1.025
+            vel = bounced * 2
             ball.velocity = vel.x, vel.y + offset
 
 
@@ -66,19 +38,47 @@ class PongGame(Widget):
     ball = ObjectProperty(None)
     player1 = ObjectProperty(None)
     player2 = ObjectProperty(None)
-    start = ObjectProperty(None)
+    startg = ObjectProperty(None)
     restart = ObjectProperty(None)
+    stext = StringProperty("Start开始")
+    rstext = StringProperty("Restart")
 
-    def serve_ball(self, instance, value, vel=(4, 0)):
+    def __init__(self, **kwargs):
+        super(PongGame, self).__init__(**kwargs)
+        self.startg.bind(on_press=self.pause)
+        self.restart.bind(on_press=self.serve_ball)
+        self.restart.bind(on_press=self.score)
+        self.event = Clock.schedule_interval(self.update, 1.0 / 60.0)
+
+    def continueupdate(self):
+        return Clock.schedule_interval(self.update, 1.0 / 60.0)
+
+    def pause(self, *args, **kwargs):
+        if self.stext == "Start":
+            self.stext = "Pause"
+            self.event.cancel()
+        else:
+            self.stext = "Start"
+            self.event = self.continueupdate()
+
+    def checkwinner(self):
+        if self.player1.score >= 10:
+            self.add_widget(Label(text="PLAYER 1 WINS"))
+            return True
+        if self.player2.score >= 10:
+            self.add_widget(Label(text="PLAYER 2 WINS"))
+            return True
+        return False
+
+    def serve_ball(self, instance=None, vel=(-4, 0), *args, **kwargs):
         self.ball.center = self.center
         self.ball.velocity = vel
-        print('My callback is call from', instance)
-        print('and the a value changed to', value)
+
+    def score(self, *args, **kwargs):
+        self.player1.score = 0
+        self.player2.score = 0
 
     def update(self, dt):
-        res = RestartGame()
-        res.bind(rs=self.serve_ball)
-        res.rs = 0
         self.ball.move()
 
         # bounce ball off paddles
@@ -92,10 +92,16 @@ class PongGame(Widget):
         # went off a side to score point?
         if self.ball.x < self.x:
             self.player2.score += 1
-            self.serve_ball(vel=(4, 0))
+            if self.checkwinner():
+                self.event.cancel()
+            else:
+                self.serve_ball(vel=(4, 0))
         if self.ball.x > self.width:
             self.player1.score += 1
-            self.serve_ball(vel=(-4, 0))
+            if self.checkwinner():
+                self.event.cancel()
+            else:
+                self.serve_ball(vel=(-4, 0))
 
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
@@ -107,7 +113,6 @@ class PongGame(Widget):
 class PongApp(App):
     def build(self):
         game = PongGame()
-        Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
 
 

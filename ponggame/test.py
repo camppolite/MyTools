@@ -1,25 +1,28 @@
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.button import Button
-from kivy.properties import NumericProperty, ReferenceListProperty,\
-    ObjectProperty
-from kivy.vector import Vector
-from kivy.clock import Clock
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.event import EventDispatcher
-import os
+from kivy.lang import Builder
 
-class MyClass(EventDispatcher):
-    a = NumericProperty(1)
+root = Builder.load_string(
+    '''
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba:0, 1, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        Button:
+            text: '11'
+            font_name: 'DroidSansFallbackFull'
+            size_hint: .5, .5
+            pos_hint:{'center_x':.5, 'center_y':.5}
+    '''
+)
 
-def callback(instance, value):
-    print('My callback is call from', instance)
-    print('and the a value changed to', value)
 
-ins = MyClass()
-ins.bind(a=callback)
+class MainApp(App):
+    def build(self):
+        return root
 
-# At this point, any change to the a property will call your callback.
-ins.a = 5    # callback called
-ins.a = 5    # callback not called, because the value did not change
-ins.a = -1   # callback called
+
+if __name__ == '__main__':
+    MainApp().run()
