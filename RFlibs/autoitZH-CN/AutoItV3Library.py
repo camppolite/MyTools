@@ -5,6 +5,8 @@ __version__ = "0.3"
 
 import autoit
 
+INTDEFAULT = -2147483647
+
 
 class AutoItV3Library:
     """
@@ -21,7 +23,7 @@ class AutoItV3Library:
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
-        self.INTDEFAULT = -2147483647
+        pass
 
     @staticmethod
     def auto_it_set_option(option, param):
@@ -490,8 +492,8 @@ class AutoItV3Library:
         _text = kwargs.get("text", "")
         _button = kwargs.get("button", "left")
         _clicks = kwargs.get("clicks", 1)
-        _x = kwargs.get("x", self.INTDEFAULT)
-        _y = kwargs.get("y", self.INTDEFAULT)
+        _x = kwargs.get("x", INTDEFAULT)
+        _y = kwargs.get("y", INTDEFAULT)
 
         return autoit.control_click(title, control, text=_text, button=_button, clicks=_clicks, x=_x, y=_y)
 
@@ -540,8 +542,8 @@ class AutoItV3Library:
         """
         _button = kwargs.get("button", "left")
         _clicks = kwargs.get("clicks", 1)
-        _x = kwargs.get("x", self.INTDEFAULT)
-        _y = kwargs.get("y", self.INTDEFAULT)
+        _x = kwargs.get("x", INTDEFAULT)
+        _y = kwargs.get("y", INTDEFAULT)
 
         return autoit.control_click_by_handle(hwnd, h_ctrl, button=_button, clicks=_clicks, x=_x, y=_y)
 
@@ -2724,7 +2726,7 @@ class AutoItV3Library:
         """
         return autoit.is_admin()
 
-    def mouse_click(self, button="left", x=self.INTDEFAULT, y=self.INTDEFAULT, clicks=1, speed=-1):
+    def mouse_click(self, button="left", x=INTDEFAULT, y=INTDEFAULT, clicks=1, speed=-1):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -5041,7 +5043,7 @@ class AutoItV3Library:
         """
         return autoit.statusbar_get_text_by_handle(hwnd, int(part), int(buf_size))
 
-    def tooltip(self, tip, x=self.INTDEFAULT, y=self.INTDEFAULT):
+    def tooltip(self, tip, x=INTDEFAULT, y=INTDEFAULT):
         """
         ----------------------------------------------------------------------------------------------------------------
 
