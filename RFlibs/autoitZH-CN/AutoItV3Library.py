@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 __author__ = 'Wu Dirui'
-__version__ = "0.2"
+__version__ = "0.3"
 
 import autoit
-import time
 
-INTDEFAULT = -2147483647
 
 class AutoItV3Library:
     """
@@ -23,9 +21,10 @@ class AutoItV3Library:
     ROBOT_LIBRARY_SCOPE = "GLOBAL"
 
     def __init__(self):
-        pass
+        self.INTDEFAULT = -2147483647
 
-    def auto_it_set_option(self, option, param):
+    @staticmethod
+    def auto_it_set_option(option, param):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -67,16 +66,19 @@ class AutoItV3Library:
         1 = 屏幕的绝对位置(默认)
         2 = 相对激活窗口客户区的坐标
 
-        ExpandEnvStrings         更改字面字符串和 % 符号的解释方式.默认情况下字符串按原文解释,此选项允许您在字符串中使用形如 %environment% 这样的环境变量,例如 "临时文件夹的路径是: %temp%".
+        ExpandEnvStrings         更改字面字符串和 % 符号的解释方式.默认情况下字符串按原文解释,此选项允许您在字符串中
+        使用形如 %environment% 这样的环境变量,例如 "临时文件夹的路径是: %temp%".
         1 = 展开环境变量(类似于 AutoIt v2)
         0 = 不展开展环境变量(默认)
         若未设置此选项则要实现类似功能的方法是:"临时文件夹的路径是: " & EnvGet("temp")
 
-        ExpandVarStrings         更改字面字符串和变量/宏($ 和 @)符号的解释方式.默认情况下字符串按原文解释,此选项允许您在字符串中使用变量和宏,例如 "变量 var1 的值是 $var1$".
+        ExpandVarStrings         更改字面字符串和变量/宏($ 和 @)符号的解释方式.默认情况下字符串按原文解释,
+        此选项允许您在字符串中使用变量和宏,例如 "变量 var1 的值是 $var1$".
         1 = 展开变量(在此模式下如果要表示 $ 或 @ 本身则请用连续两个相应符号表示,例如:"这里有一个美元符号 $$").
         0 = 不展开变量(默认)
 
-        GUICloseOnESC            当用户在一个GUI窗口(处于激活状态时)按下 ESC 键则$GUI_EVENT_CLOSE 消息将被发送.此选项用以切换这一行为.
+        GUICloseOnESC            当用户在一个GUI窗口(处于激活状态时)按下 ESC 键则$GUI_EVENT_CLOSE 消息将被发送.
+        此选项用以切换这一行为.
         1 = 在按下 ESC 时发送消息 $GUI_EVENT_CLOSE(默认).
         0 = 在按下 ESC 时不发送消息 $GUI_EVENT_CLOSE
 
@@ -85,7 +87,8 @@ class AutoItV3Library:
         0 = 相对于上一个控件的起始位置(左上角).
         2 = 相对于当前位置的坐标. A -1 for left or top parameter don't increment the start.
         So next line is -1,offset; next cell is offset,-1; 当前单元为 -1,-1.
-        Obviously "offset" cannot be -1 which reserved to indicate the no increment. But if you can use a multiple of the width you choose to skip or go back.
+        Obviously "offset" cannot be -1 which reserved to indicate the no increment. But if you can use a multiple
+         of the width you choose to skip or go back.
 
         GUIDataSeparatorChar       定义 GUICtrlSetData 函数里面的分割符.
          默认字符为: '|'.
@@ -116,7 +119,8 @@ class AutoItV3Library:
         1 = 屏幕的绝对位置(默认)
         2 = 相对激活窗口客户区的坐标
 
-        MustDeclareVars                如果设置了此选项为1则所有变量在使用之前必须先使用 Dim/Local/Global 声明,这将有助于减少各种因误拼变量而引起的bug的出现.
+        MustDeclareVars                如果设置了此选项为1则所有变量在使用之前必须先使用 Dim/Local/Global 声明,
+        这将有助于减少各种因误拼变量而引起的bug的出现.
         1 = 变量必须先声明
         0 = 变量不需预先声明(默认)
 
@@ -125,18 +129,24 @@ class AutoItV3Library:
         1 = 屏幕的绝对位置(默认)
         2 = 相对激活窗口客户区的坐标
 
-        SendAttachMode SendAttachMode               指定在使用 Send() 函数时 AutoIt 是否捆绑(attach)输入线程.当不捆绑的时候(默认模式 = 0)对 capslock/scrolllock/numlock 等按键状态的检测将是不准确的(指在 NT4 下).不过,在设置捆绑模式 = 1的时候,Send("{... down/up}") 等语法将不被支持,在发送按键的时候也可能会导致系统挂起等问题.至于 ControlSend() 函数则 总是 捆绑线程的,而且不受此模式设置的影响.
+        SendAttachMode SendAttachMode               指定在使用 Send() 函数时 AutoIt 是否捆绑(attach)输入线程.
+        当不捆绑的时候(默认模式 = 0)对 capslock/scrolllock/numlock 等按键状态的检测将是不准确的(指在 NT4 下).
+        不过,在设置捆绑模式 = 1的时候,Send("{... down/up}") 等语法将不被支持,在发送按键的时候也可能会导致系统
+        挂起等问题.至于 ControlSend() 函数则 总是 捆绑线程的,而且不受此模式设置的影响.
+
         0 = 不捆绑(默认)
         1 = 捆绑
 
-        SendCapslockMode                         指定是否让 AutoIt 在执行 Send 函数之前保存大小写切换键(CapsLock)的状态并在完成操作后恢复到原来的状态.
+        SendCapslockMode                 指定是否让 AutoIt 在执行 Send 函数之前保存大小写切换键(CapsLock)的状态
+                                            并在完成操作后恢复到原来的状态.
         0 = 不保存/恢复
         1 = 保存并恢复(默认)
 
         SendKeyDelay                    更改发送键击命令之间的延迟时间长度.
         以毫秒为单位(默认值=5).设置此值为0时也许会无效,这时请使用1代替.
 
-        SendKeyDownDelay                更改在每次键击期间(松开按键之前)按住按键的时间长度.对于一些需要花费一定时间才能注册按键的应用程序,您可能就要提高这一数值.
+        SendKeyDownDelay                更改在每次键击期间(松开按键之前)按住按键的时间长度.对于一些需要花费一定时间
+                                            才能注册按键的应用程序,您可能就要提高这一数值.
         以毫秒为单位(默认值 = 5).
 
         TCPTimeout                      a name="TCPTimeout">定义TCP 函数连接时最大延迟事件(超过就不再连接).
@@ -155,7 +165,8 @@ class AutoItV3Library:
         1 = 隐藏托盘图标
 
         TrayMenuMode                     扩展脚本在 系统托盘图标/菜单里面的事件. 这个选项可以结合多个选项:
-        0 = 默认菜单项目(脚本暂停中.../退出) 扩展到系统托盘图标; 用户添加的项目自动的取消选中; 如果您双击系统托盘图标,那么返回值为默认样式 (default).
+        0 = 默认菜单项目(脚本暂停中.../退出) 扩展到系统托盘图标; 用户添加的项目自动的取消选中; 如果您双击系统托盘图标,
+        那么返回值为默认样式 (default).
         1 = 没有默认菜单
         2 = 用户创建的菜单单击过后不会自动的取消选中状态.
         4 = 双击系统托盘图标不会返回菜单项目ID.
@@ -176,7 +187,8 @@ class AutoItV3Library:
         WinTextMatchMode                   更改窗口函数在执行搜索操作时的窗口文本匹配模式.
         1 = 完全匹配(较慢)模式(默认)
         2 = 快速模式
-        在快速匹配模式下,AutoIt 将只能"看见"对话框文本、按钮文本和某些控件的标题,而在默认模式下则能检测到更多的文本(例如记事本窗口的内容).
+        在快速匹配模式下,AutoIt 将只能"看见"对话框文本、按钮文本和某些控件的标题,而在默认模式下则能检测
+        到更多的文本(例如记事本窗口的内容).
         如果在执行较多窗口的搜索操作时遇到性能(指速度)上的问题,那么您就应该考虑使用快速模式.
 
         WinTitleMatchMode                  更改窗口函数在执行搜索操作时的标题匹配模式.
@@ -263,11 +275,12 @@ class AutoItV3Library:
 
         opt("WinWaitDelay", 250)        #250 毫秒
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.auto_it_set_option(option, param)
+        return autoit.auto_it_set_option(option, int(param))
 
-    def clip_get(self, buf_size=256):
+    @staticmethod
+    def clip_get(buf_size=256):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -323,10 +336,11 @@ class AutoItV3Library:
 
         ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.clip_get(buf_size)
+        return autoit.clip_get(int(buf_size))
 
-    def clip_put(self, value):
-        '''
+    @staticmethod
+    def clip_put(value):
+        """
         ----------------------------------------------------------------------------------------------------------------
 
         [描述]
@@ -373,11 +387,11 @@ class AutoItV3Library:
         clip_put("我被拷贝到剪贴板")       #打开记事本,右键粘贴,看看有什么!
 
         ----------------------------------------------------------------------------------------------------------------
-        '''
+        """
         return autoit.clip_put(value)
 
     def control_click(self, title, control, **kwargs):
-        '''
+        """
         ----------------------------------------------------------------------------------------------------------------
 
         [描述]
@@ -396,7 +410,8 @@ class AutoItV3Library:
 
         text (文本)              [可选参数] 目标窗口文本.
 
-        button (按钮)            [可选参数] 要点击的按钮, 可以是"left"(左键), "right"(右键), "middle"(中键), "main"(主要), "menu"(菜单), "primary"(主键), "secondary"(次键). 默认为left(左键).
+        button (按钮)            [可选参数] 要点击的按钮, 可以是"left"(左键), "right"(右键), "middle"(中键),
+         "main"(主要), "menu"(菜单), "primary"(主键), "secondary"(次键). 默认为left(左键).
 
         clicks (点击次数)         [可选参数] 要点击鼠标按钮的次数. 默认值为 1.
 
@@ -419,8 +434,11 @@ class AutoItV3Library:
         一些控件在未被激活(激活使用WinActivate()函数)之前将不能使用ControlClick().
         使用两次的点击将会发送一个双击消息到控件 - 这个事件可以用于在资源管理器控件中打开一个文件!
 
-        如果用户在控制面板中交换了鼠标左键和右键, 按钮的行为也将会不同. "Left"(左键) 和 "right"(右键) 总是点击那些按钮,不管按钮是否被交换.
-        The "primary" or "main" button will be the main click, whether or not the buttons are swapped. The "secondary" or "menu" buttons will usually bring up the context menu, whether the buttons are swapped or not.
+        如果用户在控制面板中交换了鼠标左键和右键, 按钮的行为也将会不同. "Left"(左键) 和 "right"(右键) 总是点击
+        那些按钮,不管按钮是否被交换.
+        The "primary" or "main" button will be the main click, whether or not the buttons are swapped.
+         The "secondary" or "menu" buttons will usually bring up the context menu, whether the buttons are
+         swapped or not.
 
         [按钮]                          [正常]                         [按钮交换后]
         ""                              Left(左键)                        Left(左键)
@@ -468,17 +486,17 @@ class AutoItV3Library:
             print("ERROR"," 貌似没找到窗口嘛...")
 
         ----------------------------------------------------------------------------------------------------------------
-        '''
+        """
         _text = kwargs.get("text", "")
         _button = kwargs.get("button", "left")
         _clicks = kwargs.get("clicks", 1)
-        _x = kwargs.get("x", INTDEFAULT)
-        _y = kwargs.get("y", INTDEFAULT)
+        _x = kwargs.get("x", self.INTDEFAULT)
+        _y = kwargs.get("y", self.INTDEFAULT)
 
         return autoit.control_click(title, control, text=_text, button=_button, clicks=_clicks, x=_x, y=_y)
 
     def control_click_by_handle(self, hwnd, h_ctrl, **kwargs):
-        '''
+        """
         ----------------------------------------------------------------------------------------------------------------
 
         [描述]
@@ -497,7 +515,8 @@ class AutoItV3Library:
 
         text (文本)         [可选参数] 目标窗口文本.
 
-        button (按钮)       [可选参数] 要点击的按钮, 可以是"left"(左键), "right"(右键), "middle"(中键), "main"(主要), "menu"(菜单), "primary"(主键), "secondary"(次键). 默认为left(左键).
+        button (按钮)       [可选参数] 要点击的按钮, 可以是"left"(左键), "right"(右键), "middle"(中键), "main"(主要),
+         "menu"(菜单), "primary"(主键), "secondary"(次键). 默认为left(左键).
 
         clicks (点击次数)    [可选参数] 要点击鼠标按钮的次数. 默认值为 1.
 
@@ -518,16 +537,17 @@ class AutoItV3Library:
         [相关]
 
         用法参考Control Click
-        '''
+        """
         _button = kwargs.get("button", "left")
         _clicks = kwargs.get("clicks", 1)
-        _x = kwargs.get("x", INTDEFAULT)
-        _y = kwargs.get("y", INTDEFAULT)
+        _x = kwargs.get("x", self.INTDEFAULT)
+        _y = kwargs.get("y", self.INTDEFAULT)
 
         return autoit.control_click_by_handle(hwnd, h_ctrl, button=_button, clicks=_clicks, x=_x, y=_y)
 
-    def control_command(self, title, control, command, buf_size=256, **kwargs):
-        '''
+    @staticmethod
+    def control_command(title, control, command, buf_size=256, **kwargs):
+        """
         ----------------------------------------------------------------------------------------------------------------
 
         [描述]
@@ -560,23 +580,25 @@ class AutoItV3Library:
 
         [命令, 选项]                               [返回值]
 
-        "IsVisible", ""                              若目标控件可见则返回值为1,否则为0.
+        "IsVisible", ""                          若目标控件可见则返回值为1,否则为0.
 
-        "IsEnabled", ""                              若目标控件可用(未被禁用)则返回值为1,否则为0.
+        "IsEnabled", ""                          若目标控件可用(未被禁用)则返回值为1,否则为0.
 
-        "ShowDropDown", ""                            弹出/下拉 组合框(ComboBox)的列表.
+        "ShowDropDown", ""                        弹出/下拉 组合框(ComboBox)的列表.
 
-        "HideDropDown", ""                            收回/隐藏 组合框(ComboBox)的列表.
+        "HideDropDown", ""                       收回/隐藏 组合框(ComboBox)的列表.
 
-        "AddString", '字符串'                         在 ListBox 或 ComboBox 的编辑框后面附加指定字符串.
+        "AddString", '字符串'                   在 ListBox 或 ComboBox 的编辑框后面附加指定字符串.
 
-        "DelString", 出现次序                         删除在 ListBox 或 ComboBox 的编辑框中指定的字符串(从0开始,0 代表第一个).
+        "DelString", 出现次序                   删除在 ListBox 或 ComboBox 的编辑框中指定的字符串(从0开始,0 代表第一个).
 
-        "FindString", '字符串'                        返回在 ListBox 或 ComboBox 的编辑框中与指定字符串匹配项目的出现次序(从0开始,0 代表第一个).
+        "FindString", '字符串'                      返回在 ListBox 或 ComboBox 的编辑框中与指定字符串匹配项目的
+                                                     出现次序(从0开始,0 代表第一个).
 
-        "SetCurrentSelection", 出现次序                通过指定出现次序(从0开始,0 代表第一个)把 ListBox 或 ComboBox 的当前选择项设为指定的项目.
+        "SetCurrentSelection", 出现次序              通过指定出现次序(从0开始,0 代表第一个)把 ListBox 或 ComboBox 的
+                                                     当前选择项设为指定的项目.
 
-        "SelectString", '字符串'                      通过指定字符串把 ListBox 或 ComboBox 的当前选择项设为匹配字符串的项目.
+        "SelectString", '字符串'                  通过指定字符串把 ListBox 或 ComboBox 的当前选择项设为匹配字符串的项目.
 
         "IsChecked", ""                               若目标按钮(复选框/单选框)被选中则返回值为1,否则为0.
 
@@ -598,13 +620,14 @@ class AutoItV3Library:
 
         "EditPaste", '字符串'                            在目标编辑框中插入符(caret)所在位置后插入指定字符串.
 
-        "CurrentTab", ""                                 返回在 SysTabControl32 控件中当前显示的标签编号(从1开始,1代表左边第一个).
+        "CurrentTab", ""                       返回在 SysTabControl32 控件中当前显示的标签编号(从1开始,1代表左边第一个).
 
         "TabRight", ""                                   使 SysTabControl32 控件切换到(右边的)下一个标签.
 
         "TabLeft", ""                                    使 SysTabControl32 控件切换到(左边的)下一个标签.
 
-        "SendCommandID", 命令ID                          模拟 WM_COMMAND 消息. 通常用于 ToolbarWindow32 控件 - 使用Au3Info的工具栏标签得到命令ID.
+        "SendCommandID", 命令ID                          模拟 WM_COMMAND 消息. 通常用于 ToolbarWindow32 控件
+                                                         - 使用Au3Info的工具栏标签得到命令ID.
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -620,7 +643,8 @@ class AutoItV3Library:
         [相关]
 
         Control Click, Control Disable, Control Enable, Control Focus, Control Get Pos, Control Get Text, Control Hide,
-        Control Move, Control Set Text, Control Show, Statusbar Get Text, Win Activate, WinMenu Select Item, WinGet Class List,
+        Control Move, Control Set Text, Control Show, Statusbar Get Text, Win Activate, WinMenu Select Item,
+        WinGet Class List,
         Control Get Focus, Control List View, Control Send, Control Tree View
 
         ----------------------------------------------------------------------------------------------------------------
@@ -638,13 +662,14 @@ class AutoItV3Library:
         control_command("[CLASS:Notepad]", "Edit1", "EditPaste", extra= "放点文本进去")
 
         ----------------------------------------------------------------------------------------------------------------
-        '''
+        """
         _text = kwargs.get("text", "")
         _extra = kwargs.get("extra", "")
 
-        return autoit.control_command(title, control, command, buf_size, text=_text, extra=_extra)
+        return autoit.control_command(title, control, command, int(buf_size), text=_text, extra=_extra)
 
-    def control_command_by_handle(self, hwnd, h_ctrl, command, buf_size = 256, ** kwargs):
+    @staticmethod
+    def control_command_by_handle(hwnd, h_ctrl, command, buf_size=256, ** kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -676,9 +701,10 @@ class AutoItV3Library:
         """
         _extra = kwargs.get("extra", "")
 
-        return autoit.control_command_by_handle(hwnd, h_ctrl, command, buf_size, extra=_extra)
+        return autoit.control_command_by_handle(hwnd, h_ctrl, command, int(buf_size), extra=_extra)
 
-    def control_list_view(self, title, control, command, **kwargs):
+    @staticmethod
+    def control_list_view(title, control, command, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -686,7 +712,8 @@ class AutoItV3Library:
 
         向指定的 ListView32 控件发送命令.
 
-        Control List View ( "窗口标题", 控件ID, "命令" [, text="窗口文本" [, extra1=选项1 [, extra2=选项2 [, buf_size=256]]]] )
+        Control List View ( "窗口标题", 控件ID, "命令" [, text="窗口文本" [, extra1=选项1 [,
+                            extra2=选项2 [, buf_size=256]]]] )
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -716,11 +743,14 @@ class AutoItV3Library:
 
         "DeSelect", 从[, 到]                                           取消选定从"从"开始直到"到"的一个或多个项目.
 
-        "FindItem", "搜索字符串" [, 子项目]                              返回与给定字符串匹配的项目的位置.若未找到指定字符串则返回值为 -1.
+        "FindItem", "搜索字符串" [, 子项目]                              返回与给定字符串匹配的项目的位置.
+                                                                        若未找到指定字符串则返回值为 -1.
 
         "GetItemCount"                                                 返回列表中项目的数量.
 
-        "GetSelected" [, 选项]                                         返回当前选中项目的位置.若 选项=0(默认)则只返回选中的第一个项目;若 选项=1 则返回由竖线"|"作为分隔符的所有选中项目,例如:"0|3|4|10".若没有选中任何项目则返回一个空字符串"".
+        "GetSelected" [, 选项]                                         返回当前选中项目的位置.若 选项=0(默认)
+        则只返回选中的第一个项目;若 选项=1 则返回由竖线"|"作为分隔符的所有选中项目,例如:"0|3|4|10".若没有
+        选中任何项目则返回一个空字符串"".
 
         "GetSelectedCount"                                             返回选中项目的数量.
 
@@ -738,7 +768,8 @@ class AutoItV3Library:
 
         "SelectInvert"                                                 切换当前的选中状态.
 
-        "ViewChange", "视图"                                           切换当前的视图.可用的视图包括"list"(列表),"details"(详细信息),"smallicons"(小图标),"largeicons"(大图标).
+        "ViewChange", "视图"                                           切换当前的视图.可用的视图包括"list"(列表),
+        "details"(详细信息),"smallicons"(小图标),"largeicons"(大图标).
 
         所有项目/子项目是基于 0 开始的. 意思是,一个列表中第一个项目/子项目是0,第二个是 1,等等.
 
@@ -843,9 +874,11 @@ class AutoItV3Library:
         _extra1 = kwargs.get("extras1", "")
         _extra2 = kwargs.get("extras2", "")
 
-        return autoit.control_list_view(title, control, command, text=_text, buf_size=_buf_size, extras1=_extra1, extras2=_extra2)
+        return autoit.control_list_view(title, control, command, text=_text, buf_size=_buf_size,
+                                        extras1=_extra1, extras2=_extra2)
 
-    def control_list_view_by_handle(self, hwnd, h_ctrl, command, **kwargs):
+    @staticmethod
+    def control_list_view_by_handle(hwnd, h_ctrl, command, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -881,9 +914,11 @@ class AutoItV3Library:
         _extra2 = kwargs.get("extra2", "")
         _buf_size = kwargs.get("buf_size", 256)
 
-        return autoit.control_list_view_by_handle(hwnd, h_ctrl, command, extra1=_extra1, extra2=_extra2, buf_size=_buf_size)
+        return autoit.control_list_view_by_handle(hwnd, h_ctrl, command, extra1=_extra1,
+                                                  extra2=_extra2, buf_size=_buf_size)
 
-    def control_disable(self, title, control, **kwargs):
+    @staticmethod
+    def control_disable(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -951,7 +986,8 @@ class AutoItV3Library:
 
         return autoit.control_disable(title, control, text=_text)
 
-    def control_disable_by_handle(self, hwnd, h_ctrl):
+    @staticmethod
+    def control_disable_by_handle(hwnd, h_ctrl):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -983,7 +1019,8 @@ class AutoItV3Library:
         """
         return autoit.control_disable_by_handle(hwnd, h_ctrl)
 
-    def control_enable(self, title, control, **kwargs):
+    @staticmethod
+    def control_enable(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1055,7 +1092,8 @@ class AutoItV3Library:
 
         return autoit.control_enable(title, control, text=_text)
 
-    def control_enable_by_handle(self, hwnd, h_ctrl):
+    @staticmethod
+    def control_enable_by_handle(hwnd, h_ctrl):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1089,7 +1127,8 @@ class AutoItV3Library:
         """
         return autoit.control_enable_by_handle(hwnd, h_ctrl)
 
-    def control_focus(self, title, control, **kwargs):
+    @staticmethod
+    def control_focus(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1146,10 +1185,10 @@ class AutoItV3Library:
         ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
-
         return autoit.control_focus(title, control, text=_text)
 
-    def control_focus_by_handle(self, hwnd, h_ctrl):
+    @staticmethod
+    def control_focus_by_handle(hwnd, h_ctrl):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1183,7 +1222,8 @@ class AutoItV3Library:
         """
         return autoit.control_focus_by_handle(hwnd, h_ctrl)
 
-    def control_get_focus(self, title, **kwargs):
+    @staticmethod
+    def control_get_focus(title, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1242,7 +1282,8 @@ class AutoItV3Library:
 
         return autoit.control_get_focus(title, buf_size=_buf_size, text=_text)
 
-    def control_get_focus_by_handle(self, hwnd, buf_size=256):
+    @staticmethod
+    def control_get_focus_by_handle(hwnd, buf_size=256):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1274,9 +1315,10 @@ class AutoItV3Library:
 
         用法参考Control Get Focus
         """
-        return autoit.control_get_focus_by_handle(hwnd, buf_size)
+        return autoit.control_get_focus_by_handle(hwnd, int(buf_size))
 
-    def control_get_handle(self, hwnd, control):
+    @staticmethod
+    def control_get_handle(hwnd, control):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1318,7 +1360,8 @@ class AutoItV3Library:
         """
         return autoit.control_get_handle(hwnd, control)
 
-    def control_get_handle_as_text(self, title, control, **kwargs):
+    @staticmethod
+    def control_get_handle_as_text(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1379,7 +1422,8 @@ class AutoItV3Library:
 
         return autoit.control_get_handle_as_text(title, control, text=_text, buf_size=_buf_size)
 
-    def control_get_pos(self, title, control, text=""):
+    @staticmethod
+    def control_get_pos(title, control, text=""):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1447,7 +1491,8 @@ class AutoItV3Library:
         """
         return autoit.control_get_pos(title, control, text)
 
-    def control_get_pos_by_handle(self, hwnd, h_ctrl):
+    @staticmethod
+    def control_get_pos_by_handle(hwnd, h_ctrl):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1490,7 +1535,8 @@ class AutoItV3Library:
         """
         return autoit.control_get_pos_by_handle(hwnd, h_ctrl)
 
-    def control_get_text(self, title, control, **kwargs):
+    @staticmethod
+    def control_get_text(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1557,7 +1603,8 @@ class AutoItV3Library:
 
         return autoit.control_get_text(title, control, text=_text, buf_size=_buf_size)
 
-    def control_get_text_by_handle(self, hwnd, h_ctrl, **kwargs):
+    @staticmethod
+    def control_get_text_by_handle(hwnd, h_ctrl, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1595,7 +1642,8 @@ class AutoItV3Library:
 
         return autoit.control_get_text_by_handle(hwnd, h_ctrl, buf_size=_buf_size)
 
-    def control_hide(self, title, control, **kwargs):
+    @staticmethod
+    def control_hide(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1663,7 +1711,8 @@ class AutoItV3Library:
 
         return autoit.control_hide(title, control, text=_text)
 
-    def control_hide_by_handle(self, hwnd, h_ctrl):
+    @staticmethod
+    def control_hide_by_handle(hwnd, h_ctrl):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1697,7 +1746,8 @@ class AutoItV3Library:
         """
         return autoit.control_hide_by_handle(hwnd, h_ctrl)
 
-    def control_move(self, title, control, x, y, width=-1, height=-1, **kwargs):
+    @staticmethod
+    def control_move(title, control, x, y, width=-1, height=-1, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1771,9 +1821,10 @@ class AutoItV3Library:
         """
         _text = kwargs.get("text", "")
 
-        return autoit.control_move(title, control, x, y, width, height, text=_text)
+        return autoit.control_move(title, control, int(x), int(y), int(width), int(height), text=_text)
 
-    def control_move_by_handle(self, hwnd, h_ctrl, x, y, width=-1, height=-1):
+    @staticmethod
+    def control_move_by_handle(hwnd, h_ctrl, x, y, width=-1, height=-1):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1813,9 +1864,10 @@ class AutoItV3Library:
 
         用法参考Control Move
         """
-        return autoit.control_move_by_handle(hwnd, h_ctrl, x, y, width, height)
+        return autoit.control_move_by_handle(hwnd, h_ctrl, int(x), int(y), int(width), int(height))
 
-    def control_send(self, title, control, send_text, mode=0, **kwargs):
+    @staticmethod
+    def control_send(title, control, send_text, mode=0, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1860,7 +1912,8 @@ class AutoItV3Library:
         Control Send 对于命令提示行操作不稳定,因为它和正常窗口工作方式不一样(似乎检查物理按键状态超过了接受按键消息).
         正常窗口下 Control Send 可能比 Send 更可靠 - 并且它能发送shift, ctrl, alt 等等.
 
-        话说键盘 CAPS LOCK 开启情况下,Send 将发送不同的字符,也不能模拟Shift键. 比如使用捷克键盘布局. 一个好的解决办法是使用 Control Set Text.
+        话说键盘 CAPS LOCK 开启情况下,Send 将发送不同的字符,也不能模拟Shift键. 比如使用捷克键盘布局.
+        一个好的解决办法是使用 Control Set Text.
 
         控件可能需要先使用 Control Focus 命令得到焦点, 特别是当引用的控件ID由脚本本身创建.
 
@@ -1891,9 +1944,10 @@ class AutoItV3Library:
         """
         _text = kwargs.get("text", "")
 
-        return autoit.control_send(title, control, send_text, mode, text=_text)
+        return autoit.control_send(title, control, send_text, int(mode), text=_text)
 
-    def control_send_by_handle(self, hwnd, h_ctrl, send_text, mode=0):
+    @staticmethod
+    def control_send_by_handle(hwnd, h_ctrl, send_text, mode=0):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1933,9 +1987,10 @@ class AutoItV3Library:
 
         用法参考Control Send
         """
-        return autoit.control_send_by_handle(hwnd, h_ctrl, send_text, mode)
+        return autoit.control_send_by_handle(hwnd, h_ctrl, send_text, int(mode))
 
-    def control_set_text(self, title, control, control_text, **kwargs):
+    @staticmethod
+    def control_set_text(title, control, control_text, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -1997,7 +2052,8 @@ class AutoItV3Library:
 
         return autoit.control_set_text(title, control, control_text, text=_text)
 
-    def control_set_text_by_handle(self, hwnd, h_ctrl, control_text):
+    @staticmethod
+    def control_set_text_by_handle(hwnd, h_ctrl, control_text):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2033,7 +2089,8 @@ class AutoItV3Library:
         """
         return autoit.control_set_text_by_handle(hwnd, h_ctrl, control_text)
 
-    def control_show(self, title, control, **kwargs):
+    @staticmethod
+    def control_show(title, control, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2104,7 +2161,8 @@ class AutoItV3Library:
 
         return autoit.control_show(title, control, text=_text)
 
-    def control_show_by_handle(self, hwnd, h_ctrl):
+    @staticmethod
+    def control_show_by_handle(hwnd, h_ctrl):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2138,7 +2196,8 @@ class AutoItV3Library:
         """
         return autoit.control_show_by_handle(hwnd, h_ctrl)
 
-    def control_tree_view(self, title, control, command, **kwargs):
+    @staticmethod
+    def control_tree_view(title, control, command, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2146,7 +2205,8 @@ class AutoItV3Library:
 
         发送一个命令到 TreeView32 控件.
 
-        Control Tree View ( "窗口标题", 控件ID, "命令" [, text="窗口文本" [, extra1=选项1 [, extra2=选项2 [, buf_size=256]]]] )
+        Control Tree View ( "窗口标题", 控件ID, "命令" [, text="窗口文本" [, extra1=选项1 [,
+                            extra2=选项2 [, buf_size=256]]]] )
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2185,7 +2245,8 @@ class AutoItV3Library:
 
         "GetItemCount", "项目"                                  返回所选项目的子项目数量.
 
-        "GetSelected" [, 使用索引]                              返回当前所选项目的文本参考信息(如果使用索引设置为1将会返回所选项目索引位置).
+        "GetSelected" [, 使用索引]                              返回当前所选项目的文本参考信息(如果使用索引设置为1
+                                                                将会返回所选项目索引位置).
 
         "GetText", "项目"                                       返回项目文本.
 
@@ -2193,7 +2254,7 @@ class AutoItV3Library:
 
         "Select", "项目"                                        选择一个项目.
 
-        "Uncheck", "项目"                                       取消项目选中状态 (如果项目支持选中,这里指项目带有选择框).
+        "Uncheck", "项目"                                      取消项目选中状态 (如果项目支持选中,这里指项目带有选择框).
 
         "项目" 参数是一个基于字符串表达的 treeview 项目联合文本参考信息索引. 索引是基于0开始计算的. 如下例:
 
@@ -2275,7 +2336,8 @@ class AutoItV3Library:
 
         Local $gui = GUICreate("ControlTreeview 测试", 212, 212)
 
-        Local $treeview = GUICtrlCreateTreeView(6, 6, 200, 160, BitOR($TVS_HASBUTTONS, $TVS_HASLINES, $TVS_LINESATROOT, $TVS_CHECKBOXES), $WS_EX_CLIENTEDGE)
+        Local $treeview = GUICtrlCreateTreeView(6, 6, 200, 160, BitOR($TVS_HASBUTTONS, $TVS_HASLINES,
+                                                $TVS_LINESATROOT, $TVS_CHECKBOXES), $WS_EX_CLIENTEDGE)
 
         Local $h_tree = ControlGetHandle($gui, "", $treeview)
 
@@ -2330,9 +2392,11 @@ class AutoItV3Library:
         _extra1 = kwargs.get("extras1", "")
         _extra2 = kwargs.get("extras2", "")
 
-        return autoit.control_tree_view(title, control, command, text=_text, buf_size=_buf_size, extras1=_extra1, extras2=_extra2)
+        return autoit.control_tree_view(title, control, command, text=_text, buf_size=_buf_size,
+                                        extras1=_extra1, extras2=_extra2)
 
-    def control_tree_view_by_handle(self, hwnd, h_ctrl, command, **kwargs):
+    @staticmethod
+    def control_tree_view_by_handle(hwnd, h_ctrl, command, **kwargs):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2368,10 +2432,12 @@ class AutoItV3Library:
         _extra1 = kwargs.get("extras1", "")
         _extra2 = kwargs.get("extras2", "")
 
-        return autoit.control_tree_view_by_handle(hwnd, h_ctrl, command, buf_size=_buf_size, extras1=_extra1, extras2=_extra2)
+        return autoit.control_tree_view_by_handle(hwnd, h_ctrl, command, buf_size=_buf_size,
+                                                  extras1=_extra1, extras2=_extra2)
 
-    def drive_map_add(self, device, share, flag=0, user="", pwd="", buf_size=256):
-        '''
+    @staticmethod
+    def drive_map_add(device, share, flag=0, user="", pwd="", buf_size=256):
+        """
         ----------------------------------------------------------------------------------------------------------------
 
         [描述]
@@ -2384,7 +2450,8 @@ class AutoItV3Library:
 
         [参数]
 
-        device(设备名)          将网络共享文件夹映射到指定设备, 例如 "O:" 或 "LPT1:". 若传递一个空字符串到此参数则会创建一个连接,
+        device(设备名)          将网络共享文件夹映射到指定设备, 例如 "O:" 或 "LPT1:".
+        若传递一个空字符串到此参数则会创建一个连接,
         但不会映射指定驱动器. 如果您指定 "*" 一个未使用的驱动器号将会自动被选择.
 
         share(远程共享路径)    要连接到的远程共享文件夹 "//server/share".
@@ -2429,7 +2496,8 @@ class AutoItV3Library:
 
          6 = 无效的密码
 
-        注释: 当使用 "*" 作为设备名参数时本函数的返回值将不再是1或0而是选中的驱动器盘符,例如 "U:";如果此时(使用"*")遇到错误则返回一个空字符串"".
+        注释: 当使用 "*" 作为设备名参数时本函数的返回值将不再是1或0而是选中的驱动器盘符,
+        例如 "U:";如果此时(使用"*")遇到错误则返回一个空字符串"".
 
         如果定义 用户名/密码 到远程计算机,请确认远程计算机是可信任的.
 
@@ -2456,10 +2524,11 @@ class AutoItV3Library:
         drive_map_add("X:", "//myserver2/stuff2", 0, "domainx/jon", "tickle")
 
         ----------------------------------------------------------------------------------------------------------------
-        '''
-        return autoit.drive_map_add(device, share, flag, user, pwd, buf_size)
+        """
+        return autoit.drive_map_add(device, share, int(flag), user, pwd, int(buf_size))
 
-    def drive_map_del(self, device):
+    @staticmethod
+    def drive_map_del(device):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2515,7 +2584,8 @@ class AutoItV3Library:
         """
         return autoit.drive_map_del(device)
 
-    def drive_map_get(self, device, buf_size=256):
+    @staticmethod
+    def drive_map_get(device, buf_size=256):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2571,9 +2641,10 @@ class AutoItV3Library:
 
         ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.drive_map_get(device, buf_size)
+        return autoit.drive_map_get(device, int(buf_size))
 
-    def error(self):
+    @staticmethod
+    def error():
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2599,7 +2670,8 @@ class AutoItV3Library:
         """
         return autoit.error()
 
-    def is_admin(self):
+    @staticmethod
+    def is_admin():
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2652,7 +2724,7 @@ class AutoItV3Library:
         """
         return autoit.is_admin()
 
-    def mouse_click(self, button="left", x=INTDEFAULT, y=INTDEFAULT, clicks=1, speed=-1):
+    def mouse_click(self, button="left", x=self.INTDEFAULT, y=self.INTDEFAULT, clicks=1, speed=-1):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2666,13 +2738,15 @@ class AutoItV3Library:
 
         [参数]
 
-        button(按钮)               [可选参数]要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),"menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
+        button(按钮)               [可选参数]要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),
+                                    "menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
 
         X,Y坐标             [可选参数] 鼠标要移动到的目标坐标值 X/Y.若两者都留空则使用当前位置.
 
         clicks(点击次数)           [可选参数] 要点击鼠标按钮的次数.默认值为 1.
 
-        speed(速度)               [可选参数] 鼠标移动速度,可设数值范围在 1(最快)和 100(最慢)之间.若设置速度为 0 则立即移动鼠标到指定位置.默认速度为 10.
+        speed(速度)               [可选参数] 鼠标移动速度,可设数值范围在 1(最快)和 100(最慢)之间.
+                                    若设置速度为 0 则立即移动鼠标到指定位置.默认速度为 10.
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2690,7 +2764,9 @@ class AutoItV3Library:
 
         如果X坐标或者Y坐标等于 Default 关键字 则相应鼠标坐标不会移动.
 
-        若用户已通过控制面板切换了左右按钮则函数在处理这些按钮时将有不同的表现."Left" 和 "right" 永远只代表点击相应按钮(左或右),而不管按钮是否已被切换;"primary" 或 "main" 按钮将永远只代表点击主键,而不管按钮是否已被切换;"secondary" 或 "menu" 按钮通常将触发右键菜单,而不管按钮是否已被切换.
+        若用户已通过控制面板切换了左右按钮则函数在处理这些按钮时将有不同的表现."Left" 和 "right" 永远
+        只代表点击相应按钮(左或右),而不管按钮是否已被切换;"primary" 或 "main" 按钮将永远只代表点击主键,
+        而不管按钮是否已被切换;"secondary" 或 "menu" 按钮通常将触发右键菜单,而不管按钮是否已被切换.
 
         [按钮]                       [正常情况下]                     [切换后]
 
@@ -2740,9 +2816,10 @@ class AutoItV3Library:
 
         ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.mouse_click(button, x, y, clicks, speed)
+        return autoit.mouse_click(button, int(x), int(y), int(clicks), int(speed))
 
-    def mouse_click_drag(self, x1, y1, x2, y2, button="left", speed=-1):
+    @staticmethod
+    def mouse_click_drag(x1, y1, x2, y2, button="left", speed=-1):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2761,9 +2838,11 @@ class AutoItV3Library:
 
         X2坐标, Y2坐标            拖曳操作的结束坐标值 X/Y.
 
-        button(按钮)                      要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),"menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
+        button(按钮)                      要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),
+                                            "menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
 
-        speed(速度)                      [可选参数] 鼠标移动速度,可设数值范围在 1(最快)和 100(最慢)之间.若设置速度为 0 则立即移动鼠标到指定位置.默认速度为 10.
+        speed(速度)                      [可选参数] 鼠标移动速度,可设数值范围在 1(最快)和 100(最慢)之间.
+                                        若设置速度为 0 则立即移动鼠标到指定位置.默认速度为 10.
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2779,7 +2858,10 @@ class AutoItV3Library:
 
         若给定的按钮是一个空字符串则将点击左键.
 
-        若用户已通过控制面板切换了左右按钮则函数在处理这些按钮时将有不同的表现."Left" 和 "right" 永远只代表点击相应按钮(左或右),而不管按钮是否已被切换;"primary" 或 "main" 按钮将永远只代表点击主键,而不管按钮是否已被切换;"secondary" 或 "menu" 按钮通常将触发右键菜单,而不管按钮是否已被切换.详情请查看 MouseClick 函数中的表格
+        若用户已通过控制面板切换了左右按钮则函数在处理这些按钮时将有不同的表现."Left" 和 "right" 永远
+        只代表点击相应按钮(左或右),而不管按钮是否已被切换;"primary" 或 "main" 按钮将永远只代表点击主键,
+        而不管按钮是否已被切换;"secondary" 或 "menu" 按钮通常将触发右键菜单,而不管按钮是否已被切换.
+        详情请查看 MouseClick 函数中的表格
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2801,9 +2883,10 @@ class AutoItV3Library:
 
         ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.mouse_click_drag(x1, y1, x2, y2, button, speed)
+        return autoit.mouse_click_drag(int(x1), int(y1), int(x2), int(y2), button, int(speed))
 
-    def mouse_down(self, button="left"):
+    @staticmethod
+    def mouse_down(button="left"):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2817,7 +2900,8 @@ class AutoItV3Library:
 
         [参数]
 
-        button(按钮)               要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),"menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
+        button(按钮)               要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),
+        "menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2859,7 +2943,8 @@ class AutoItV3Library:
         """
         return autoit.mouse_down(button)
 
-    def mouse_get_cursor(self):
+    @staticmethod
+    def mouse_get_cursor():
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2941,7 +3026,8 @@ class AutoItV3Library:
 
         #create an array that tells us the meaning of an ID Number
 
-        IDs = ("AppStarting|Arrow|Cross|Help|IBeam|Icon|No|" + "Size|SizeAll|SizeNESW|SizeNS|SizeNWSE|SizeWE|UpArrow|Wait|Hand").split("|")
+        IDs = ("AppStarting|Arrow|Cross|Help|IBeam|Icon|No|" +
+        "Size|SizeAll|SizeNESW|SizeNS|SizeNWSE|SizeWE|UpArrow|Wait|Hand").split("|")
 
         IDs[0] = "Unknown"
 
@@ -2953,7 +3039,8 @@ class AutoItV3Library:
         """
         return autoit.mouse_get_cursor()
 
-    def mouse_get_pos(self):
+    @staticmethod
+    def mouse_get_pos():
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -2973,7 +3060,7 @@ class AutoItV3Library:
 
         [维数]                      [值]
 
-        无                      返回一个包含鼠标坐标的2元素一维数组array: $array[0] = X 坐标 (横向), $array[1] = Y 坐标 (垂直)
+        无               返回一个包含鼠标坐标的2元素一维数组array: $array[0] = X 坐标 (横向), $array[1] = Y 坐标 (垂直)
 
         0                      只返回X坐标,值为整数型.
 
@@ -3009,7 +3096,8 @@ class AutoItV3Library:
         """
         return autoit.mouse_get_pos()
 
-    def mouse_move(self, x, y, speed=-1):
+    @staticmethod
+    def mouse_move(x, y, speed=-1):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3027,7 +3115,8 @@ class AutoItV3Library:
 
         Y坐标           要移动到的屏幕上目标位置的 Y 坐标.
 
-        speed(速度)            [可选参数] 鼠标移动速度,可设数值范围在 1(最快)和 100(最慢)之间.若设置速度为 0 则立即移动鼠标到指定位置.默认速度为 10.
+        speed(速度)            [可选参数] 鼠标移动速度,可设数值范围在 1(最快)和 100(最慢)之间.
+                                若设置速度为 0 则立即移动鼠标到指定位置.默认速度为 10.
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3063,9 +3152,10 @@ class AutoItV3Library:
 
         ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.mouse_move(x, y, speed)
+        return autoit.mouse_move(int(x), int(y), int(speed))
 
-    def mouse_up(self, button="left"):
+    @staticmethod
+    def mouse_up(button="left"):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3079,7 +3169,8 @@ class AutoItV3Library:
 
         [参数]
 
-        button(按钮)               要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),"menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
+        button(按钮)               要点击的按钮:"left"(左键),"right"(右键),"middle"(中键),"main"(主键),
+        "menu"(菜单键),"primary"(主要按钮),"secondary"(次要按钮).
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3123,7 +3214,8 @@ class AutoItV3Library:
         """
         return autoit.mouse_up(button)
 
-    def mouse_wheel(self, direction, clicks=-1):
+    @staticmethod
+    def mouse_wheel(direction, clicks=-1):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3175,9 +3267,10 @@ class AutoItV3Library:
 
         ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.mouse_wheel(direction, clicks)
+        return autoit.mouse_wheel(direction, int(clicks))
 
-    def opt(self, option, value):
+    @staticmethod
+    def opt(option, value):
         """
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3193,7 +3286,8 @@ class AutoItV3Library:
 
         option(选项)          要修改的选项.请查看下面的注意部分.
 
-        value(参数)          [可选参数] 需要分配给选项的值. 因设置的选项不同而类型与意思不同. 参考下面的注意部分. 如果没有参数, 函数会返回目前的选项值. 关键字 Default 可以用于重置选项为默认值.
+        value(参数)          [可选参数] 需要分配给选项的值. 因设置的选项不同而类型与意思不同. 参考下面的注意部分.
+                                如果没有参数, 函数会返回目前的选项值. 关键字 Default 可以用于重置选项为默认值.
 
         ----------------------------------------------------------------------------------------------------------------
 
@@ -3218,16 +3312,19 @@ class AutoItV3Library:
         1 = 屏幕的绝对位置(默认)
         2 = 相对激活窗口客户区的坐标
 
-        ExpandEnvStrings         更改字面字符串和 % 符号的解释方式.默认情况下字符串按原文解释,此选项允许您在字符串中使用形如 %environment% 这样的环境变量,例如 "临时文件夹的路径是: %temp%".
+        ExpandEnvStrings         更改字面字符串和 % 符号的解释方式.默认情况下字符串按原文解释,
+                        此选项允许您在字符串中使用形如 %environment% 这样的环境变量,例如 "临时文件夹的路径是: %temp%".
         1 = 展开环境变量(类似于 AutoIt v2)
         0 = 不展开展环境变量(默认)
         若未设置此选项则要实现类似功能的方法是:"临时文件夹的路径是: " & EnvGet("temp")
 
-        ExpandVarStrings         更改字面字符串和变量/宏($ 和 @)符号的解释方式.默认情况下字符串按原文解释,此选项允许您在字符串中使用变量和宏,例如 "变量 var1 的值是 $var1$".
+        ExpandVarStrings         更改字面字符串和变量/宏($ 和 @)符号的解释方式.默认情况下字符串按原文解释,
+                                此选项允许您在字符串中使用变量和宏,例如 "变量 var1 的值是 $var1$".
         1 = 展开变量(在此模式下如果要表示 $ 或 @ 本身则请用连续两个相应符号表示,例如:"这里有一个美元符号 $$").
         0 = 不展开变量(默认)
 
-        GUICloseOnESC            当用户在一个GUI窗口(处于激活状态时)按下 ESC 键则$GUI_EVENT_CLOSE 消息将被发送.此选项用以切换这一行为.
+        GUICloseOnESC            当用户在一个GUI窗口(处于激活状态时)按下 ESC 键则$GUI_EVENT_CLOSE 消息将被发送.
+                                    此选项用以切换这一行为.
         1 = 在按下 ESC 时发送消息 $GUI_EVENT_CLOSE(默认).
         0 = 在按下 ESC 时不发送消息 $GUI_EVENT_CLOSE
 
@@ -3236,7 +3333,8 @@ class AutoItV3Library:
         0 = 相对于上一个控件的起始位置(左上角).
         2 = 相对于当前位置的坐标. A -1 for left or top parameter don't increment the start.
         So next line is -1,offset; next cell is offset,-1; 当前单元为 -1,-1.
-        Obviously "offset" cannot be -1 which reserved to indicate the no increment. But if you can use a multiple of the width you choose to skip or go back.
+        Obviously "offset" cannot be -1 which reserved to indicate the no increment.
+        But if you can use a multiple of the width you choose to skip or go back.
 
         GUIDataSeparatorChar       定义 GUICtrlSetData 函数里面的分割符.
          默认字符为: '|'.
@@ -3267,7 +3365,8 @@ class AutoItV3Library:
         1 = 屏幕的绝对位置(默认)
         2 = 相对激活窗口客户区的坐标
 
-        MustDeclareVars                如果设置了此选项为1则所有变量在使用之前必须先使用 Dim/Local/Global 声明,这将有助于减少各种因误拼变量而引起的bug的出现.
+        MustDeclareVars                如果设置了此选项为1则所有变量在使用之前必须先使用 Dim/Local/Global 声明,
+                                    这将有助于减少各种因误拼变量而引起的bug的出现.
         1 = 变量必须先声明
         0 = 变量不需预先声明(默认)
 
@@ -3276,18 +3375,25 @@ class AutoItV3Library:
         1 = 屏幕的绝对位置(默认)
         2 = 相对激活窗口客户区的坐标
 
-        SendAttachMode SendAttachMode               指定在使用 Send() 函数时 AutoIt 是否捆绑(attach)输入线程.当不捆绑的时候(默认模式 = 0)对 capslock/scrolllock/numlock 等按键状态的检测将是不准确的(指在 NT4 下).不过,在设置捆绑模式 = 1的时候,Send("{... down/up}") 等语法将不被支持,在发送按键的时候也可能会导致系统挂起等问题.至于 ControlSend() 函数则 总是 捆绑线程的,而且不受此模式设置的影响.
+        SendAttachMode SendAttachMode               指定在使用 Send() 函数时 AutoIt 是否捆绑(attach)输入线程.
+                                                    当不捆绑的时候(默认模式 = 0)对 capslock/scrolllock/numlock
+                                                    等按键状态的检测将是不准确的(指在 NT4 下).不过,
+                                                    在设置捆绑模式 = 1的时候,Send("{... down/up}") 等语法将不被支持,
+                                                    在发送按键的时候也可能会导致系统挂起等问题.
+                                                    至于 ControlSend() 函数则 总是 捆绑线程的,而且不受此模式设置的影响.
         0 = 不捆绑(默认)
         1 = 捆绑
 
-        SendCapslockMode                         指定是否让 AutoIt 在执行 Send 函数之前保存大小写切换键(CapsLock)的状态并在完成操作后恢复到原来的状态.
+        SendCapslockMode                         指定是否让 AutoIt 在执行 Send 函数之前保存大小写切换键(CapsLock)的
+                                                状态并在完成操作后恢复到原来的状态.
         0 = 不保存/恢复
         1 = 保存并恢复(默认)
 
         SendKeyDelay                    更改发送键击命令之间的延迟时间长度.
         以毫秒为单位(默认值=5).设置此值为0时也许会无效,这时请使用1代替.
 
-        SendKeyDownDelay                更改在每次键击期间(松开按键之前)按住按键的时间长度.对于一些需要花费一定时间才能注册按键的应用程序,您可能就要提高这一数值.
+        SendKeyDownDelay                更改在每次键击期间(松开按键之前)按住按键的时间长度.对于一些需要花费一定时间
+                                        才能注册按键的应用程序,您可能就要提高这一数值.
         以毫秒为单位(默认值 = 5).
 
         TCPTimeout                      a name="TCPTimeout">定义TCP 函数连接时最大延迟事件(超过就不再连接).
@@ -3306,7 +3412,8 @@ class AutoItV3Library:
         1 = 隐藏托盘图标
 
         TrayMenuMode                     扩展脚本在 系统托盘图标/菜单里面的事件. 这个选项可以结合多个选项:
-        0 = 默认菜单项目(脚本暂停中.../退出) 扩展到系统托盘图标; 用户添加的项目自动的取消选中; 如果您双击系统托盘图标,那么返回值为默认样式 (default).
+        0 = 默认菜单项目(脚本暂停中.../退出) 扩展到系统托盘图标; 用户添加的项目自动的取消选中; 如果您双击系统托盘图标,
+        那么返回值为默认样式 (default).
         1 = 没有默认菜单
         2 = 用户创建的菜单单击过后不会自动的取消选中状态.
         4 = 双击系统托盘图标不会返回菜单项目ID.
@@ -3327,7 +3434,8 @@ class AutoItV3Library:
         WinTextMatchMode                   更改窗口函数在执行搜索操作时的窗口文本匹配模式.
         1 = 完全匹配(较慢)模式(默认)
         2 = 快速模式
-        在快速匹配模式下,AutoIt 将只能"看见"对话框文本、按钮文本和某些控件的标题,而在默认模式下则能检测到更多的文本(例如记事本窗口的内容).
+        在快速匹配模式下,AutoIt 将只能"看见"对话框文本、按钮文本和某些控件的标题,而在默认模式下则能检测到更多的
+        文本(例如记事本窗口的内容).
         如果在执行较多窗口的搜索操作时遇到性能(指速度)上的问题,那么您就应该考虑使用快速模式.
 
         WinTitleMatchMode                  更改窗口函数在执行搜索操作时的标题匹配模式.
@@ -3414,13 +3522,14 @@ class AutoItV3Library:
 
         opt("WinWaitDelay", 250)        #250 毫秒
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.opt(option, value)
+        return autoit.opt(option, int(value))
 
-    def pixel_checksum(self, left, top, right, bottom, step=1):
+    @staticmethod
+    def pixel_checksum(left, top, right, bottom, step=1):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3428,7 +3537,7 @@ class AutoItV3Library:
 
         Pixel Checksum ( 左侧, 顶部, 右侧, 底部 [, 步进]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3440,9 +3549,10 @@ class AutoItV3Library:
 
         bottom(底部)          矩形区域底部的坐标.
 
-        step(步进)            [可选参数] 默认情况下每个象素都要校验一次,而此参数可跳过指定数量的象素才校验(可提升执行速度).例如,数值2表示每隔一个象素才校验一次.默认值为 1. 不推荐步进值超过 1 .
+        step(步进)            [可选参数] 默认情况下每个象素都要校验一次,而此参数可跳过指定数量的象素才
+        校验(可提升执行速度).例如,数值2表示每隔一个象素才校验一次.默认值为 1. 不推荐步进值超过 1 .
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3450,23 +3560,26 @@ class AutoItV3Library:
 
         失败: 返回 0.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         校验和使我们能检查某个区域里"某些地方"是否有变化,但我们却无从知道具体有什么变化 - 它不会告诉你哪里发生了变化.
 
-        上一个版本里,工作非常慢, 因此现在将校检写得更快了. 使用步进参数也不再被推荐. The performance gain from using a larger step is not nearly as noticeable since the function is faster all around. Also, the larger the step, the less reliable the checksum becomes when used to detect small changes in the region.
+        上一个版本里,工作非常慢, 因此现在将校检写得更快了. 使用步进参数也不再被推荐.
+        The performance gain from using a larger step is not nearly as noticeable since the function
+        is faster all around. Also, the larger the step, the less reliable the checksum becomes when
+        used to detect small changes in the region.
 
         CRC32 校检略为比 ADLDER 校检慢,但是校检精度更高.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Pixel Get Color, Pixel Search
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3490,13 +3603,14 @@ class AutoItV3Library:
 
         print("Something in the region has changed!")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.pixel_checksum(left, top, right, bottom, step)
+        return autoit.pixel_checksum(int(left), int(top), int(right), int(bottom), int(step))
 
-    def pixel_get_color(self, x, y):
+    @staticmethod
+    def pixel_get_color(x, y):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3504,7 +3618,7 @@ class AutoItV3Library:
 
         Pixel Get Color ( X坐标 , Y坐标 )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3512,7 +3626,7 @@ class AutoItV3Library:
 
         Y坐标         Y坐标值.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3520,19 +3634,19 @@ class AutoItV3Library:
 
         失败: 返回 -1 ,说明给定的坐标不合法.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Pixel Search, Mouse Get Pos, Pixel Checksum
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3544,13 +3658,14 @@ class AutoItV3Library:
 
         print("十进制颜色为", var)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.pixel_get_color(x, y)
+        return autoit.pixel_get_color(int(x), int(y))
 
-    def pixel_search(self, left, top, right, bottom, col, var=1, step=1):
+    @staticmethod
+    def pixel_search(left, top, right, bottom, col, var=1, step=1):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3558,7 +3673,7 @@ class AutoItV3Library:
 
         Pixel Search ( 左侧, 顶部, 右侧, 底部, 颜色 [, 色差 [, 步进]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3572,11 +3687,12 @@ class AutoItV3Library:
 
         col(颜色)                 要搜索的颜色值(十进制或十六进制皆可).
 
-        var(色差)                 [可选参数] 一个介于0到255之间的数值,用以指定允许的颜色偏差范围.默认值为0(表示完全匹配).
+        var(色差)                [可选参数] 一个介于0到255之间的数值,用以指定允许的颜色偏差范围.默认值为0(表示完全匹配).
 
-        step(步进)                [可选参数] 默认情况下每个象素都要校验一次,而此参数可跳过指定数量的象素才校验(可提升执行速度).例如,数值2表示每隔一个象素才校验一次.默认值为 1.
+        step(步进)                [可选参数] 默认情况下每个象素都要校验一次,而此参数可跳过指定数量的象素才
+                                校验(可提升执行速度).例如,数值2表示每隔一个象素才校验一次.默认值为 1.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3584,7 +3700,7 @@ class AutoItV3Library:
 
         失败: 把 @error 设为 1,说明指定的颜色未被发现.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -3600,15 +3716,16 @@ class AutoItV3Library:
 
         修改搜索方向可以为频繁搜索进行优化.
 
-        记住, 在典型的显示器中 1024 x 768 分辨率有 786432 个像素. 虽然 PixelSearch 被优化过, 减小搜索区域能帮助加快搜索速度.
+        记住, 在典型的显示器中 1024 x 768 分辨率有 786432 个像素. 虽然 PixelSearch 被优化过,
+        减小搜索区域能帮助加快搜索速度.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Pixel Checksum, Pixel Get Color
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3632,13 +3749,14 @@ class AutoItV3Library:
 
             print("X and Y are:", coord[0] + "," + coord[1])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.pixel_search(left, top, right, bottom, col, var, step)
+        return autoit.pixel_search(int(left), int(top), int(right), int(bottom), int(col), int(var), int(step))
 
-    def process_close(self, process):
+    @staticmethod
+    def process_close(process):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3646,13 +3764,13 @@ class AutoItV3Library:
 
         Process Close ( "进程")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         process(进程)             要终止的进程的名称或 PID(进程标识符).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3665,7 +3783,7 @@ class AutoItV3Library:
          3 = 终止进程失败
          4 = 不能验证进程是否存在
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -3677,13 +3795,13 @@ class AutoItV3Library:
 
         每隔 250 毫秒左右进程将被检测一次.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Process Exists, Process Wait, Process Wait Close, Run, Win Close, Process List, Run As, Shutdown, Win Kill
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3700,13 +3818,14 @@ class AutoItV3Library:
 
             process_close(PID)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         return autoit.process_close(process)
 
-    def process_exists(self, process):
+    @staticmethod
+    def process_exists(process):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3714,13 +3833,13 @@ class AutoItV3Library:
 
         Process Exists ( "进程" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         process(进程)            要检查的进程的名称或 PID(进程标识符).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3728,7 +3847,7 @@ class AutoItV3Library:
 
         失败: 返回0,进程不存在.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -3738,13 +3857,13 @@ class AutoItV3Library:
 
         每隔 250 毫秒左右进程将被检测一次.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Process Close, Process Wait, Process Wait Close, Win Exists, Process List
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3756,13 +3875,14 @@ class AutoItV3Library:
 
             print("例子", "记事本确实在运行.")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         return autoit.process_exists(process)
 
-    def process_set_priority(self, process, priority):
+    @staticmethod
+    def process_set_priority(process, priority):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3770,7 +3890,7 @@ class AutoItV3Library:
 
         Process Set Priority ( "进程", 优先级 )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3790,7 +3910,7 @@ class AutoItV3Library:
 
             5 - 实时(请谨慎使用,可能会导致系统不稳定)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3798,19 +3918,19 @@ class AutoItV3Library:
 
         失败: 返回值为0并把 @error 设为 1.若试图使用不支持的优先级则把 @error 设为 2.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Process List
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3824,13 +3944,14 @@ class AutoItV3Library:
 
         # 设置记事本的优先级为：空闲/低
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.process_set_priority(process, priority)
+        return autoit.process_set_priority(process, int(priority))
 
-    def process_wait(self, process, timeout=0):
+    @staticmethod
+    def process_wait(process, timeout=0):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3838,7 +3959,7 @@ class AutoItV3Library:
 
         Process Wait ( "进程名" [, 超时时间] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3846,7 +3967,7 @@ class AutoItV3Library:
 
         timeout(超时时间)         [可选参数] 指定要等待的时间长度(默认为一直等待).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3854,7 +3975,7 @@ class AutoItV3Library:
 
         失败: 返回 0,已超时.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -3864,13 +3985,14 @@ class AutoItV3Library:
 
         本函数是唯一一个不接受PID作为参数的进程函数,这是因为 PID 是随机分配的,等待一个特定的 PID 出现并没有任何意义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
-        Process Close, Process Exists, Process Wait Close, Run Wait, Win Wait, Win Wait Active, Process List, Run As Wait, Win Get Process
+        Process Close, Process Exists, Process Wait Close, Run Wait, Win Wait, Win Wait Active, Process List,
+        Run As Wait, Win Get Process
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3880,13 +4002,14 @@ class AutoItV3Library:
 
         process_wait("notepad.exe")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.process_wait(process, timeout)
+        return autoit.process_wait(process, int(timeout))
 
-    def process_wait_close(self, process, timeout=0):
+    @staticmethod
+    def process_wait_close(process, timeout=0):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3894,7 +4017,7 @@ class AutoItV3Library:
 
         Process Wait Close ( "进程名" [, 超时时间] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3902,7 +4025,7 @@ class AutoItV3Library:
 
         timeout(超时时间)            [可选参数] 指定要等待的时间长度(默认为一直等待).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -3910,7 +4033,7 @@ class AutoItV3Library:
 
         失败: 返回0 ,超时. 当无效PID时 @error 设置为非0 并且 @extended 设置为 0xCCCCCCCC.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -3922,13 +4045,14 @@ class AutoItV3Library:
 
         如果进程不存在,返回1.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
-        Process Close, Process Exists, Process Wait, Run Wait, Win Wait Close, Process List, Run As Wait, Win Get Process
+        Process Close, Process Exists, Process Wait, Run Wait, Win Wait Close, Process List, Run As Wait,
+        Win Get Process
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -3946,14 +4070,16 @@ class AutoItV3Library:
 
         process_wait_close(PID)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.process_wait_close(process, timeout)
+        return autoit.process_wait_close(process, int(timeout))
 
     from autoit import properties
-    def run(self, filename, work_dir="", show_flag=properties.SW_SHOWNORMAL):
-        '''
-        -----------------------------------------------------------------------------------------------------------------
+
+    @staticmethod
+    def run(filename, work_dir="", show_flag=properties.SW_SHOWNORMAL):
+        """
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -3961,7 +4087,7 @@ class AutoItV3Library:
 
         Run ( "程序" [, "工作目录" [, 显示标志]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -3995,7 +4121,7 @@ class AutoItV3Library:
 
             SW_SHOWNORMAL = 1
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4003,7 +4129,7 @@ class AutoItV3Library:
 
         失败: 返回0并设置 @error 为非0值.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -4013,18 +4139,24 @@ class AutoItV3Library:
 
         在运行指定程序后脚本将(立即)继续执行后面的语句.若要在指定程序执行完毕之前暂停脚本的执行则请使用 RunWait 函数代替.
 
-        Providing the Standard I/O parameter with the proper values permits interaction with the child process through the StderrRead, StdinWrite and StdoutRead functions. Combine the flag values (or use $STDERR_CHILD, $STDIN_CHILD & $STDOUT_CHILD, defined in Constants.au3) to manage more than one stream.
+        Providing the Standard I/O parameter with the proper values permits interaction with the child process
+        through the StderrRead, StdinWrite and StdoutRead functions. Combine the flag values (or use $STDERR_CHILD,
+        $STDIN_CHILD & $STDOUT_CHILD, defined in Constants.au3) to manage more than one stream.
 
-        In order for the streams to close, the following conditions must be met: 1) The child process has closed it's end of the stream (this happens when the child closes). 2) AutoIt must read any captured streams until there is no more data. 3) If STDIN is provided for the child, StdinWrite() must be called to close the stream. Once all streams are detected as no longer needed, all internal resources will automatically be freed.
+        In order for the streams to close, the following conditions must be met: 1) The child process has closed
+        it's end of the stream (this happens when the child closes). 2) AutoIt must read any captured streams until
+        there is no more data. 3) If STDIN is provided for the child, StdinWrite() must be called to close the stream.
+        Once all streams are detected as no longer needed, all internal resources will automatically be freed.
         StdioClose 可以用于强制关闭 STDIO 流.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
-        Run Wait, Run As, Run As Wait, Shell Execute, Shell Execute Wait, Stderr Read, Stdin Write, Stdout Read, Stdio Close, Process Close, Console Read
+        Run Wait, Run As, Run As Wait, Shell Execute, Shell Execute Wait, Stderr Read, Stdin Write, Stdout Read,
+        Stdio Close, Process Close, Console Read
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4034,13 +4166,14 @@ class AutoItV3Library:
 
         run("Notepad.exe", "", 3)
 
-        -----------------------------------------------------------------------------------------------------------------
-        '''
-        return autoit.run(filename, work_dir, show_flag)
-
-    def run_as(self, user, domain, password, filename, logon_flag=1, work_dir="", show_flag=properties.SW_SHOWNORMAL):
+        ----------------------------------------------------------------------------------------------------------------
         """
-        -----------------------------------------------------------------------------------------------------------------
+        return autoit.run(filename, work_dir, int(show_flag))
+
+    @staticmethod
+    def run_as(user, domain, password, filename, logon_flag=1, work_dir="", show_flag=properties.SW_SHOWNORMAL):
+        """
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4048,7 +4181,7 @@ class AutoItV3Library:
 
         Run As ( "用户名", "域名", "密码", "程序", 登录标志 [, "工作目录" [, 显示标志]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4065,7 +4198,8 @@ class AutoItV3Library:
             2 - 只是网络认证.
             4 - 继承调用程序的环境变量替换用户的环境变量.
 
-        work_dir(工作目录)          [可选参数] 程序工作目录. 如果不指定, 将会被设置为 @SystemDir .这个路径不一定指向程序所在路径.
+        work_dir(工作目录)          [可选参数] 程序工作目录. 如果不指定, 将会被设置为 @SystemDir .
+                                    这个路径不一定指向程序所在路径.
 
         show_flag(显示标志)         [可选参数] 执行程序的 "显示" 标志:
 
@@ -4093,7 +4227,7 @@ class AutoItV3Library:
 
             SW_SHOWNORMAL = 1
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4101,36 +4235,54 @@ class AutoItV3Library:
 
         失败: 返回 0 并设置 @error 为一个非0值
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         Paths with spaces need to be enclosed in quotation marks.
 
-        It is important to specify a working directory the user you are running as has access to, otherwise the function will fail.
+        It is important to specify a working directory the user you are running as has access to,
+        otherwise the function will fail.
 
-        It is recommended that you only load the user's profile is you are sure you need it. There is a small chance a profile can be stuck in memory under the right conditions. If a script using RunAs() happens to be running as the SYSTEM account (for example, if the script is running as a service) and the user's profile is loaded, then you must take care that the script remains running until the child process closes.
+        It is recommended that you only load the user's profile is you are sure you need it.
+        There is a small chance a profile can be stuck in memory under the right conditions.
+        If a script using RunAs() happens to be running as the SYSTEM account (for example,
+        if the script is running as a service) and the user's profile is loaded, then you must
+        take care that the script remains running until the child process closes.
 
-        When running as an administrator, the Secondary Logon (RunAs) service must be enabled or this function will fail. This does not apply when running as the SYSTEM account.
+        When running as an administrator, the Secondary Logon (RunAs) service must be enabled or
+         this function will fail. This does not apply when running as the SYSTEM account.
 
-        After running the requested program the script continues. To pause execution of the script until the spawned program has finished use the RunAsWait function instead.
+        After running the requested program the script continues. To pause execution of the script until
+         the spawned program has finished use the RunAsWait function instead.
 
-        Providing the Standard I/O parameter with the proper values permits interaction with the child process through the StderrRead, StdinWrite and StdoutRead functions. Combine the flag values (or use $STDERR_CHILD, $STDIN_CHILD & $STDOUT_CHILD, defined in Constants.au3) to manage more than one stream.
+        Providing the Standard I/O parameter with the proper values permits interaction with the child
+        process through the StderrRead, StdinWrite and StdoutRead functions. Combine the flag values
+        (or use $STDERR_CHILD, $STDIN_CHILD & $STDOUT_CHILD, defined in Constants.au3) to manage more than one stream.
 
-        In order for the streams to close, the following conditions must be met: 1) The child process has closed it's end of the stream (this happens when the child closes). 2) AutoIt must read any captured streams until there is no more data. 3) If STDIN is provided for the child, StdinWrite() must be called to close the stream. Once all streams are detected as no longer needed, all internal resources will automatically be freed.
+        In order for the streams to close, the following conditions must be met: 1) The child process has
+        closed it's end of the stream (this happens when the child closes). 2) AutoIt must read any captured
+        streams until there is no more data. 3) If STDIN is provided for the child, StdinWrite() must be called
+        to close the stream. Once all streams are detected as no longer needed, all internal resources will
+        automatically be freed.
         StdioClose can be used to force the STDIO streams closed.
 
-        The "load profile" and "network credentials only" options are incompatible. Using both will produce undefined results.
+        The "load profile" and "network credentials only" options are incompatible.
+        Using both will produce undefined results.
 
-        There is an issue in the Windows XP generation of Windows which prevents STDIO redirection and the show flag from working. See Microsoft Knowledge Base article KB818858 for more information about which versions are affected as well as a hotfix for the issue. User's running Windows 2000, Windows XP SP2 or later, or Windows Vista are not affected.
+        There is an issue in the Windows XP generation of Windows which prevents STDIO redirection and
+        the show flag from working. See Microsoft Knowledge Base article KB818858 for more information
+        about which versions are affected as well as a hotfix for the issue. User's running Windows 2000,
+        Windows XP SP2 or later, or Windows Vista are not affected.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
-        Run, Run Wait, Run As Wait, Shell Execute, Shell Execute Wait, Stderr Read, Stdin Write, Stdout Read, Stdio Close, Process Close
+        Run, Run Wait, Run As Wait, Shell Execute, Shell Execute Wait, Stderr Read, Stdin Write, Stdout Read,
+        Stdio Close, Process Close
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4148,13 +4300,14 @@ class AutoItV3Library:
 
         run_as(sUserName, @ComputerName, sPassword, "cmd.exe", 0)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.run_as(user, domain, password, filename, logon_flag, work_dir, show_flag)
+        return autoit.run_as(user, domain, password, filename, int(logon_flag), work_dir, int(show_flag))
 
-    def run_as_wait(self, user, domain, password, filename, logon_flag=1, work_dir="", show_flag=properties.SW_SHOWNORMAL):
+    @staticmethod
+    def run_as_wait(user, domain, password, filename, logon_flag=1, work_dir="", show_flag=properties.SW_SHOWNORMAL):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4162,7 +4315,7 @@ class AutoItV3Library:
 
         Run As Wait ( "用户名", "域", "密码", "程序", 登录标志 [, "工作目录" [, 显示标志]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4179,7 +4332,7 @@ class AutoItV3Library:
         2 - 只使用网络证书.
         4 - 继承调用过程环境而非用户的.
 
-        work_dir(工作目录)             [可选参数] 工作目录. 如果不指定, 则使用 @SystemDir.这个路径不一定指向程序所在路径.
+        work_dir(工作目录)            [可选参数] 工作目录. 如果不指定, 则使用 @SystemDir.这个路径不一定指向程序所在路径.
 
         show_flag(显示标志)            [可选参数] 执行程序的显示状态:
 
@@ -4207,7 +4360,7 @@ class AutoItV3Library:
 
             SW_SHOWNORMAL = 1
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4215,33 +4368,46 @@ class AutoItV3Library:
 
         失败:  返回 0 并设置 @error 为非零.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         Paths with spaces need to be enclosed in quotation marks.
 
-        It is important to specify a working directory the user you are running as has access to, otherwise the function will fail.
+        It is important to specify a working directory the user you are running as has access to,
+        otherwise the function will fail.
 
-        It is recommended that you only load the user's profile is you are sure you need it. There is a small chance a profile can be stuck in memory under the right conditions. If a script using RunAs() happens to be running as the SYSTEM account (for example, if the script is running as a service) and the user's profile is loaded, then you must take care that the script remains running until the child process closes.
+        It is recommended that you only load the user's profile is you are sure you need it.
+        There is a small chance a profile can be stuck in memory under the right conditions.
+        If a script using RunAs() happens to be running as the SYSTEM account (for example,
+        if the script is running as a service) and the user's profile is loaded, then you must
+        take care that the script remains running until the child process closes.
 
-        When running as an administrator, the Secondary Logon (RunAs) service must be enabled or this function will fail. This does not apply when running as the SYSTEM account.
+        When running as an administrator, the Secondary Logon (RunAs) service must be enabled or
+        this function will fail. This does not apply when running as the SYSTEM account.
 
-        After running the requested program the script pauses until the program terminates. To run a program and then immediately continue script execution use the RunAs function instead.
+        After running the requested program the script pauses until the program terminates.
+        To run a program and then immediately continue script execution use the RunAs function instead.
 
-        Some programs will appear to return immediately even though they are still running; these programs spawn another process - you may be able to use the ProcessWaitClose function to handle these cases.
+        Some programs will appear to return immediately even though they are still running;
+        these programs spawn another process - you may be able to use the ProcessWaitClose
+        function to handle these cases.
 
-        The "load profile" and "network credentials only" options are incompatible. Using both will produce undefined results.
+        The "load profile" and "network credentials only" options are incompatible.
+        Using both will produce undefined results.
 
-        There is an issue in the Windows XP generation of Windows which prevents STDIO redirection and the show flag from working. See Microsoft Knowledge Base article KB818858 for more information about which versions are affected as well as a hotfix for the issue. User's running Windows 2000, Windows XP SP2 or later, or Windows Vista are not affected.
+        There is an issue in the Windows XP generation of Windows which prevents STDIO redirection and
+        the show flag from working. See Microsoft Knowledge Base article KB818858 for more information
+        about which versions are affected as well as a hotfix for the issue. User's running Windows 2000,
+        Windows XP SP2 or later, or Windows Vista are not affected.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Process Wait, Process Wait Close, Run, Run Wait, Shell Execute, Shell Execute Wait, Run As
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4267,13 +4433,14 @@ class AutoItV3Library:
 
         print("The process we were waiting for has closed.")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.run_as_wait(user, domain, password, filename, logon_flag, work_dir, show_flag)
+        return autoit.run_as_wait(user, domain, password, filename, int(logon_flag), work_dir, int(show_flag))
 
-    def run_wait(self, filename, work_dir="", show_flag=properties.SW_SHOWNORMAL):
-        '''
-        -----------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def run_wait(filename, work_dir="", show_flag=properties.SW_SHOWNORMAL):
+        """
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4281,7 +4448,7 @@ class AutoItV3Library:
 
         Run Wait ( "程序路径" [, "工作目录" [, 显示标志]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4315,7 +4482,7 @@ class AutoItV3Library:
 
             SW_SHOWNORMAL = 1
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4323,7 +4490,7 @@ class AutoItV3Library:
 
         失败: 返回 0 并设置@error为非0.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -4333,15 +4500,16 @@ class AutoItV3Library:
 
         在指定的程序运行时脚本将暂停执行直到该程序终止为止.若要运行该程序并立即继续执行脚本的后面语句请使用 Run 函数代替.
 
-        有些程序会立即(使脚本)返回(并执行后面的语句),即使这些程序仍在运行中;这些程序启动了其它进程,您可以试试使用 ProcessWaitClose 函数来处理这种情况.
+        有些程序会立即(使脚本)返回(并执行后面的语句),即使这些程序仍在运行中;这些程序启动了其它进程,
+        您可以试试使用 ProcessWaitClose 函数来处理这种情况.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Process Wait, Process Wait Close, Run, Shell Execute, Shell Execute Wait, Run As, Run As Wait
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4357,13 +4525,14 @@ class AutoItV3Library:
 
         print("程序退出代码:", val)
 
-        -----------------------------------------------------------------------------------------------------------------
-        '''
-        return autoit.run_wait(filename, work_dir, show_flag)
-
-    def send(self, send_text, mode=0):
+        ----------------------------------------------------------------------------------------------------------------
         """
-        -----------------------------------------------------------------------------------------------------------------
+        return autoit.run_wait(filename, work_dir, int(show_flag))
+
+    @staticmethod
+    def send(send_text, mode=0):
+        """
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4371,7 +4540,7 @@ class AutoItV3Library:
 
         Send ( "按键" [, 标志] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4381,35 +4550,40 @@ class AutoItV3Library:
           标志 = 0 (默认),按键序列中含有的特殊字符比如 + 和 ! 将被视为 SHIFT 和 ALT 键.
           标志 = 1, 按键将按原样发送.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        关于使用 Send 函数的更多说明/技巧请查看 附录 .AutoIt 可发送所有的 ASCII 码及扩展 ASCII 码字符(0-255),若要发送 UNICODE 编码的字符则必须使用"ASC"选项加上您要发送的字符代码(见下面的 {ASC}).
+        关于使用 Send 函数的更多说明/技巧请查看 附录 .AutoIt 可发送所有的 ASCII 码及扩展 ASCII 码字符(0-255),
+        若要发送 UNICODE 编码的字符则必须使用"ASC"选项加上您要发送的字符代码(见下面的 {ASC}).
 
         "Send" 命令的语法跟 ScriptIt 以及 Visual Basic 的 "SendKeys" 命令类似.字符序列将按原文发送,但下列字符除外:
 
         '!'
 
-        表示告知 AutoIt 要发送一个 ALT 键击动作,因此语句 Send("This is text!a") 的意思是按序发送按键 "This is text" 然后在按下"ALT+a".
+        表示告知 AutoIt 要发送一个 ALT 键击动作,因此语句 Send("This is text!a") 的意思是按序发送按键 "This is text"
+        然后在按下"ALT+a".
 
-        有些程序对大小写字符和 ALT 键相当挑剔,举例来说,"!A" 可能会被认为不同于 "!a";第一个代表 ALT+SHIFT+A,而第二个则代表 ALT+a.如果拿不准的话最好使用小写!
+        有些程序对大小写字符和 ALT 键相当挑剔,举例来说,"!A" 可能会被认为不同于 "!a";第一个代表 ALT+SHIFT+A,
+        而第二个则代表 ALT+a.如果拿不准的话最好使用小写!
 
         '+'
 
-        表示告知 AutoIt 要发送一个 SHIFT 键击动作,因此语句 Send("Hell+o") 的意思是按序发送按键 "HellO".Send("!+a") 表示发送 "ALT+SHIFT+a".
+        表示告知 AutoIt 要发送一个 SHIFT 键击动作,因此语句 Send("Hell+o") 的意思是按序发送按键 "HellO".Send("!+a")
+        表示发送 "ALT+SHIFT+a".
 
         '^'
 
         表示告知 AutoIt 要发送一个 CONTROL 键击动作,因此语句 Send("^!a") 的意思是发送按键 "CTRL+ALT+a".
 
-        有些程序对大小写字符和 CTRL 键相当挑剔,举例来说, "^A" 可能会被认为不同于 "^a";第一个代表 CTRL+SHIFT+A,而第二个则代表 CTRL+a. 如果拿不准的话最好使用小写!
+        有些程序对大小写字符和 CTRL 键相当挑剔,举例来说, "^A" 可能会被认为不同于 "^a";
+        第一个代表 CTRL+SHIFT+A,而第二个则代表 CTRL+a. 如果拿不准的话最好使用小写!
 
         '#'
 
@@ -4616,7 +4790,8 @@ class AutoItV3Library:
 
         大多数笔记本电脑的键盘上都会有一个特殊的 Fn 键,此键无法被模拟.
 
-        若把标志参数的值设为1则"按键"参数将被原样发送.如果某些文本是从变量里拷贝而来,而您又希望完全按原样发送这些文本的话,就应该使用这一设置.
+        若把标志参数的值设为1则"按键"参数将被原样发送.如果某些文本是从变量里拷贝而来,
+        而您又希望完全按原样发送这些文本的话,就应该使用这一设置.
 
         例如,先打开 文件夹选项窗口(位于控制面板),然后请尝试执行下面这些语句:
 
@@ -4648,24 +4823,30 @@ class AutoItV3Library:
 
         Send("{RIGHT}") 切换到右边的菜单或展开子菜单.
 
-        如果您对快捷键(Alt+F4,PrintScreen,Ctrl+C等等)的重要性还不太了解,请查看 Windows 的帮助信息(按下热键 Win+F1 即可) 以获得关于快捷键的完整列表.
+        如果您对快捷键(Alt+F4,PrintScreen,Ctrl+C等等)的重要性还不太了解,
+        请查看 Windows 的帮助信息(按下热键 Win+F1 即可) 以获得关于快捷键的完整列表.
 
-        When running a script on a remote computer through a program as psexec (www.sysinternals.com) or beyondexec (www.beyondlogic.org) it is necessary, specially when sending strokes to a program launch by the script with a Run function, to use ControlSend or other ControlXXX functions to directly communicate with the control. Send even with Opt("SendAttachMode",1) is not working.
+        When running a script on a remote computer through a program as psexec (www.sysinternals.com)
+        or beyondexec (www.beyondlogic.org) it is necessary, specially when sending strokes to a program
+        launch by the script with a Run function, to use ControlSend or other ControlXXX functions to directly
+        communicate with the control. Send even with Opt("SendAttachMode",1) is not working.
         Using the -s mode when submitting can help to have better right on the remote computer.
 
         Opt("SendKeyDelay",...) 修改发送按钮的延迟时间(两次按键之间).
 
         Opt("SendKeyDownDelay",...) 修改按钮按下延迟时间(从释放按键结束).
 
-        设置 "SendKeyDelay" 和 "SendKeyDownDelay" 都为0将移除所有按键延迟. This may be required under certain circumstances, for example, when locking the system ("#l") it may be necessary to remove the delays in order to prevent the WIN key from being stuck down.
+        设置 "SendKeyDelay" 和 "SendKeyDownDelay" 都为0将移除所有按键延迟. This may be required under
+        certain circumstances, for example, when locking the system ("#l") it may be necessary to remove
+        the delays in order to prevent the WIN key from being stuck down.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         SendKeep Active, Control Send, Block Input, Hot Key Set, Win Menu Select Item
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4683,13 +4864,14 @@ class AutoItV3Library:
 
         send("Today's time/date is {F5}")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.send(send_text, mode)
+        return autoit.send(send_text, int(mode))
 
-    def shutdown(self, code):
+    @staticmethod
+    def shutdown(code):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4697,13 +4879,13 @@ class AutoItV3Library:
 
         Shutdown ( 代码 )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         code(代码)             shutdown 命令的各种代码的组合值. 参考注意事项.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4711,7 +4893,7 @@ class AutoItV3Library:
 
         失败: 返回值 0 并按照 GetLastError() 的值设置 @error.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -4737,7 +4919,7 @@ class AutoItV3Library:
 
         若设置了其它代码则待机或休眠将被忽略.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
@@ -4751,13 +4933,14 @@ class AutoItV3Library:
 
         shutdown(6)  #强制重启
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         return autoit.shutdown(code)
 
-    def statusbar_get_text(self, title, text="", part=1, buf_size=256):
+    @staticmethod
+    def statusbar_get_text(title, text="", part=1, buf_size=256):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4765,7 +4948,7 @@ class AutoItV3Library:
 
         Statusbar Get Text ( "窗口标题" [, text="窗口文本" [, 部分 [,buf_size=256]]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4773,11 +4956,12 @@ class AutoItV3Library:
 
         text(窗口文本)                 [可选参数] 目标窗口文本.
 
-        part(部分)                     [可选参数] 要读取的状态栏的文本"部分",默认值为 1. 1 表示状态栏上的(左边)第一个可能的分区文本,通常包含最有用的信息(比如"准备","载入中..."等等).
+        part(部分)                     [可选参数] 要读取的状态栏的文本"部分",默认值为 1.
+        1 表示状态栏上的(左边)第一个可能的分区文本,通常包含最有用的信息(比如"准备","载入中..."等等).
 
         buf_size (缓冲区大小)      [可选参数] 默认值为256.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4785,20 +4969,23 @@ class AutoItV3Library:
 
         失败: 返回一个空字符串并把 @error 设为 1 说明无法读取文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        本函数执行时将尝试读取目标窗口的第一个标准状态栏(Microsoft 通用控件: msctls_statusbar32)的文本.某些程序使用了它们自己的状态栏或者MS通用控件的特殊版本,StatusbarGetText 就无法读取这些状态栏.例如,StatusbarText 就不能获取 TextPad 的状态栏信息.不过,TextPad 的状态栏的第一个区域的文本可通过使用 ControlGetText("TextPad", "", "HSStatusBar1") 来获取
+        本函数执行时将尝试读取目标窗口的第一个标准状态栏(Microsoft 通用控件: msctls_statusbar32)的文本.
+        某些程序使用了它们自己的状态栏或者MS通用控件的特殊版本,StatusbarGetText 就无法读取这些状态栏.
+        例如,StatusbarText 就不能获取 TextPad 的状态栏信息.不过,TextPad 的状态栏的第一个区域的文本
+        可通过使用 ControlGetText("TextPad", "", "HSStatusBar1") 来获取
         StatusbarGetText 能在目标窗口最小化甚至隐藏的情况下正常工作.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Control Get Text, Control Command
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4812,13 +4999,14 @@ class AutoItV3Library:
 
         print("Internet Explorer's status bar says:", x)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.statusbar_get_text(title, text, part, buf_size)
+        return autoit.statusbar_get_text(title, text, int(part), int(buf_size))
 
-    def statusbar_get_text_by_handle(self, hwnd, part=1, buf_size=256):
+    @staticmethod
+    def statusbar_get_text_by_handle(hwnd, part=1, buf_size=256):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4826,17 +5014,18 @@ class AutoItV3Library:
 
         Statusbar Get Text By Handle ( "窗口句柄" [, 部分 [,buf_size=256]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         hwnd(窗口句柄)                 目标窗口句柄.
 
-        part(部分)                     [可选参数] 要读取的状态栏的文本"部分",默认值为 1. 1 表示状态栏上的(左边)第一个可能的分区文本,通常包含最有用的信息(比如"准备","载入中..."等等).
+        part(部分)                     [可选参数] 要读取的状态栏的文本"部分",默认值为 1.
+        1 表示状态栏上的(左边)第一个可能的分区文本,通常包含最有用的信息(比如"准备","载入中..."等等).
 
         buf_size (缓冲区大小)      [可选参数] 默认值为256.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4850,11 +5039,11 @@ class AutoItV3Library:
 
         用法参考Statusbar Get Text
         """
-        return autoit.statusbar_get_text_by_handle(hwnd, part, buf_size)
+        return autoit.statusbar_get_text_by_handle(hwnd, int(part), int(buf_size))
 
-    def tooltip(self, tip, x=INTDEFAULT, y=INTDEFAULT):
+    def tooltip(self, tip, x=self.INTDEFAULT, y=self.INTDEFAULT):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4862,7 +5051,7 @@ class AutoItV3Library:
 
         ToolTip ( "文本" [, X坐标 [, Y坐标]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4872,7 +5061,7 @@ class AutoItV3Library:
 
         Y坐标                 [可选参数] 工具提示出现位置的 Y 坐标.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4880,7 +5069,7 @@ class AutoItV3Library:
 
         失败: 返回 0 ,当标题长度大于 99.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -4892,13 +5081,13 @@ class AutoItV3Library:
         要显示一个图标, 您必须设置一个非空标题. 要使图标和标题在同一行,则必须使用一个标题.
         如果使用居中标志, 工具提示会根据指定的坐标的相对位置进行显示.如果在气泡提示上使用居中标志,将会指向指定坐标点.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         TrayTip, MsgBox, SplashTextOn
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4914,13 +5103,14 @@ class AutoItV3Library:
 
         time.sleep(2)  # 等待两秒让工具提示(tooltip)显示
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        return autoit.tooltip(tip, x, y)
+        return autoit.tooltip(tip, int(x), int(y))
 
-    def win_activate(self, title, **kwargs):
+    @staticmethod
+    def win_activate(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4928,7 +5118,7 @@ class AutoItV3Library:
 
         Win Activate ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -4936,7 +5126,7 @@ class AutoItV3Library:
 
         text(窗口文本)         [可选参数] 要激活的窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -4944,21 +5134,22 @@ class AutoItV3Library:
 
         失败: 返回 0 (如果没有找到指定窗口).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        您可以使用 WinActive 函数来检查 WinActivate 是否成功,若同时有多个窗口符合匹配条件则程序将激活最近被激活的窗口,WinActivate 在窗口最小化的情况下仍能正常工作.但是,"最顶层"窗口仍将覆盖在被激活窗口之上.
+        您可以使用 WinActive 函数来检查 WinActivate 是否成功,若同时有多个窗口符合匹配条件则程序将激活最近被激活的窗口,
+        WinActivate 在窗口最小化的情况下仍能正常工作.但是,"最顶层"窗口仍将覆盖在被激活窗口之上.
 
         @extended 包含一个扩展信息,指明是否成功完成激活.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Close, Win Set State, Win Kill, Win Move
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -4978,15 +5169,16 @@ class AutoItV3Library:
 
         win_activate("[CLASS:Notepad]", "")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_activate(title, text=_text)
 
-    def win_activate_by_handle(self, handle):
+    @staticmethod
+    def win_activate_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -4994,13 +5186,13 @@ class AutoItV3Library:
 
         Win Activate By Handle ( "窗口句柄")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)         要激活的窗口句柄. 参考 标题特殊定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5016,9 +5208,10 @@ class AutoItV3Library:
         """
         return autoit.win_activate_by_handle(handle)
 
-    def win_active(self, title, **kwargs):
+    @staticmethod
+    def win_active(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5026,7 +5219,7 @@ class AutoItV3Library:
 
         Win Active ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5034,7 +5227,7 @@ class AutoItV3Library:
 
         text(窗口文本)        [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5042,19 +5235,19 @@ class AutoItV3Library:
 
         失败: 返回值为 0,说明目标窗口不是激活状态.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Exists, Win Wait, Win Wait Active, Win Wait Close, Win Wait Not Active
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5072,15 +5265,16 @@ class AutoItV3Library:
 
             print("记事本窗口是活动的")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_active(title, text=_text)
 
-    def win_active_by_handle(self, handle):
+    @staticmethod
+    def win_active_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5088,13 +5282,13 @@ class AutoItV3Library:
 
         Win Active By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)       要检查的目标窗口句柄. 参考 标题特殊定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5110,9 +5304,10 @@ class AutoItV3Library:
         """
         return autoit.win_active_by_handle(handle)
 
-    def win_close(self, title, **kwargs):
+    @staticmethod
+    def win_close(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5120,7 +5315,7 @@ class AutoItV3Library:
 
         Win Close ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5128,7 +5323,7 @@ class AutoItV3Library:
 
         text(窗口文本)             [可选参数] 要关闭的窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5136,19 +5331,20 @@ class AutoItV3Library:
 
         失败: 返回 0. (如果没有找到指定窗口).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        本函数将发送一个关闭消息到目标窗口,效果因窗口不同而不同(它可能会询问是否保存数据,等等).若要强制性关闭目标窗口,请使用 WinKill 函数.若同时有多个窗口符合匹配条件则程序将关闭最近被激活的窗口.
+        本函数将发送一个关闭消息到目标窗口,效果因窗口不同而不同(它可能会询问是否保存数据,等等).
+        若要强制性关闭目标窗口,请使用 WinKill 函数.若同时有多个窗口符合匹配条件则程序将关闭最近被激活的窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Activate, Win Exists, Win Kill, Win Set State, Process Close, Win Move
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5168,15 +5364,16 @@ class AutoItV3Library:
 
         win_close("[CLASS:Notepad]")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_close(title, text=_text)
 
-    def win_close_by_handle(self, handle):
+    @staticmethod
+    def win_close_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5184,13 +5381,13 @@ class AutoItV3Library:
 
         Win Close By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)             要关闭的窗口句柄. 参考 标题特殊定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5206,9 +5403,10 @@ class AutoItV3Library:
         """
         return autoit.win_close_by_handle(handle)
 
-    def win_exists(self, title, **kwargs):
+    @staticmethod
+    def win_exists(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5216,7 +5414,7 @@ class AutoItV3Library:
 
         Win Exists ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5224,7 +5422,7 @@ class AutoItV3Library:
 
         text=(窗口文本)          [可选参数] 要检查的窗口所包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5232,19 +5430,19 @@ class AutoItV3Library:
 
         失败: 返回 0,窗口不存在.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         即使目标窗口处于隐藏状态,WinExist 仍将返回 1.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Active, Win Wait, Win Wait Active, Win Wait Close, Win Wait Not Active, Process Exists, Win Close
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5260,15 +5458,16 @@ class AutoItV3Library:
 
             print("记事本窗口存在")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_exists(title, text=_text)
 
-    def win_exists_by_handle(self, handle):
+    @staticmethod
+    def win_exists_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5276,13 +5475,13 @@ class AutoItV3Library:
 
         Win Exists By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)          目标窗口句柄. 参考 标题特殊定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5298,9 +5497,10 @@ class AutoItV3Library:
         """
         return autoit.win_exists_by_handle(handle)
 
-    def win_get_caret_pos(self):
+    @staticmethod
+    def win_get_caret_pos():
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5308,13 +5508,13 @@ class AutoItV3Library:
 
         Win Get Caret Pos ( )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5326,19 +5526,20 @@ class AutoItV3Library:
 
         失败: 把 @error 设为 1.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        若设置了 CaretCoordMode 使用绝对位置则 WinGetCaretPos 对那些具有多文档界面(MDI)的应用程序获得的坐标值可能是不准确的.请参考下面的示例.注意:有些程序可能会无论光标实际位置在哪都只会返回某固定数值!
+        若设置了 CaretCoordMode 使用绝对位置则 WinGetCaretPos 对那些具有多文档界面(MDI)的应用程序
+        获得的坐标值可能是不准确的.请参考下面的示例.注意:有些程序可能会无论光标实际位置在哪都只会返回某固定数值!
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         CaretCoordMode (Option)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5400,13 +5601,14 @@ class AutoItV3Library:
 
         time.sleep(2)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         return autoit.win_get_caret_pos()
 
-    def win_get_class_list(self, title, buf_size=200, **kwargs):
+    @staticmethod
+    def win_get_class_list(title, buf_size=200, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5414,7 +5616,7 @@ class AutoItV3Library:
 
         Win Get Class List ( "窗口标题" [, buf_size=200 [, text="窗口文本"]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5424,7 +5626,7 @@ class AutoItV3Library:
 
         text(窗口文本)                     [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5432,19 +5634,20 @@ class AutoItV3Library:
 
         失败: 返回值为"",并把 @error 设为 1,说明不存在符合匹配要求的窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        类别名由换行符(@LF)分开.在目标窗口处于最小化或隐藏状态时 WinGetClassList 仍能正常工作.最多能获得 64KB 的文本内容.若同时有多个窗口符合匹配条件则程序将读取最近被激活的窗口的控件类.
+        类别名由换行符(@LF)分开.在目标窗口处于最小化或隐藏状态时 WinGetClassList 仍能正常工作.
+        最多能获得 64KB 的文本内容.若同时有多个窗口符合匹配条件则程序将读取最近被激活的窗口的控件类.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Get Text, Control Command
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5460,15 +5663,16 @@ class AutoItV3Library:
 
         print("类列表为:", text)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_get_class_list(title, buf_size, text=_text)
+        return autoit.win_get_class_list(title, int(buf_size), text=_text)
 
-    def win_get_class_list_by_handle(self, handle, buf_size=200):
+    @staticmethod
+    def win_get_class_list_by_handle(handle, buf_size=200):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5476,7 +5680,7 @@ class AutoItV3Library:
 
         Win Get Class List By Handle ( "窗口句柄" [, buf_size=200] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5484,7 +5688,7 @@ class AutoItV3Library:
 
         buf_size (缓冲区大小)              [可选参数] 默认值为200.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5498,11 +5702,12 @@ class AutoItV3Library:
 
         用法参考Win Get Class List
         """
-        return autoit.win_get_class_list_by_handle(handle, buf_size)
+        return autoit.win_get_class_list_by_handle(handle, int(buf_size))
 
-    def win_get_client_size(self, title, **kwargs):
+    @staticmethod
+    def win_get_client_size(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5510,7 +5715,7 @@ class AutoItV3Library:
 
         Win Get Client Size ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5518,7 +5723,7 @@ class AutoItV3Library:
 
         text(窗口文本)           [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5530,19 +5735,22 @@ class AutoItV3Library:
 
         失败: 返回值为0,并把 @error 设为1,说明未找到目标窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        若目标窗口被最小化,则返回的宽度和高度都是零.但是,即使目标窗口处于(非最小化)隐藏状态 WinGetClientSize 仍能正常工作.若窗口标题是"Program Manager"则本函数将返回桌面的大小.WinGetClientSize("") 则表示目标窗口是当前激活窗口.若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的大小.
+        若目标窗口被最小化,则返回的宽度和高度都是零.但是,
+        即使目标窗口处于(非最小化)隐藏状态 WinGetClientSize 仍能正常工作.
+        若窗口标题是"Program Manager"则本函数将返回桌面的大小.WinGetClientSize("") 则表示目标窗口是当前激活窗口.
+        若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的大小.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Get Pos, Win Move
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5554,15 +5762,16 @@ class AutoItV3Library:
 
         print("活动窗口客户端大小 (宽度,高度):", size[0] + "," + size[1])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_get_client_size(title, text=_text)
 
-    def win_get_client_size_by_handle(self, handle):
+    @staticmethod
+    def win_get_client_size_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5570,13 +5779,13 @@ class AutoItV3Library:
 
         Win Get Client Size By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)          目标窗口句柄.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5596,9 +5805,10 @@ class AutoItV3Library:
         """
         return autoit.win_get_client_size_by_handle(handle)
 
-    def win_get_handle(self, title, **kwargs):
+    @staticmethod
+    def win_get_handle(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5606,7 +5816,7 @@ class AutoItV3Library:
 
         Win Get Handle ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5614,7 +5824,7 @@ class AutoItV3Library:
 
         text(窗口文本)               [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5622,27 +5832,28 @@ class AutoItV3Library:
 
         失败: 返回0,并把 @error 设为 1,说明不存在符合匹配要求的窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         具体示例请参考Win Get Handle As Text
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Get Handle As Text
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_get_handle(title, text=_text)
 
-    def win_get_handle_as_text(self, title, buf_size=16, **kwargs):
+    @staticmethod
+    def win_get_handle_as_text(title, buf_size=16, **kwargs):
         """
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
 
          [描述]
 
@@ -5650,7 +5861,7 @@ class AutoItV3Library:
 
          Win Get Handle As Text ( "窗口标题" [, buf_size=16 [, text="窗口文本"] )
 
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
 
          [参数]
 
@@ -5660,7 +5871,7 @@ class AutoItV3Library:
 
          text(窗口文本)                   [可选参数] 目标窗口文本.
 
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
 
          [返回值]
 
@@ -5668,7 +5879,7 @@ class AutoItV3Library:
 
          失败: 返回一个""(空字符串),并把 @error 设为 1,说明不存在符合匹配要求的窗口.
 
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
 
          [注意/说明]
 
@@ -5676,13 +5887,13 @@ class AutoItV3Library:
 
          一旦您成功取得了窗口句柄,即使以后窗口标题发生了变化,还是可以使用这个句柄来进行窗口操作.
 
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
 
          [相关]
 
          Win Set Title, GUICreate, Win List
 
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
 
          [示例/演示]
 
@@ -5712,15 +5923,16 @@ class AutoItV3Library:
 
              control_send(handle, "Edit1", "AbCdE")
 
-         -----------------------------------------------------------------------------------------------------------------
+         ---------------------------------------------------------------------------------------------------------------
          """
         _text = kwargs.get("text", "")
 
-        return autoit.win_get_handle_as_text(title, buf_size, text=_text)
+        return autoit.win_get_handle_as_text(title, int(buf_size), text=_text)
 
-    def win_get_pos(self, title, **kwargs):
+    @staticmethod
+    def win_get_pos(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5728,7 +5940,7 @@ class AutoItV3Library:
 
         Win Get Pos ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5736,7 +5948,7 @@ class AutoItV3Library:
 
         text(窗口文本)            [可选参数] 指定窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5752,21 +5964,22 @@ class AutoItV3Library:
 
         失败: 返回值为1,并把 @error 设为 1,说明未找到目标窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         若目标窗口被最小化则 WinGetPos 的返回值将是负数(比如 -32000),但对(非最小化的)隐藏窗口则可正常工作.
 
-        若窗口标题是"Program Manager"则本函数将返回桌面的大小.若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的大小.
+        若窗口标题是"Program Manager"则本函数将返回桌面的大小.
+        若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的大小.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Get Client Size, Win Move, Win Get State
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5776,17 +5989,18 @@ class AutoItV3Library:
 
         size = win_get_pos("[active]")
 
-        print("活动窗口状态 (X坐标,Y坐标,宽度,高度):", size[0] + ",    " + size[1]  ",   " + size[2] + ",   " + size[3])
+        print("活动窗口状态 (X坐标,Y坐标,宽度,高度):", size[0] + ", " + size[1]  ",   " + size[2] + ",   " + size[3])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_get_pos(title, text=_text)
 
-    def win_get_pos_by_handle(self, handle):
+    @staticmethod
+    def win_get_pos_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5794,13 +6008,13 @@ class AutoItV3Library:
 
         Win Get Pos By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)           目标窗口句柄. 参考标题高级定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5824,9 +6038,10 @@ class AutoItV3Library:
         """
         return autoit.win_get_pos_by_handle(handle)
 
-    def win_get_process(self, title, **kwargs):
+    @staticmethod
+    def win_get_process(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5834,7 +6049,7 @@ class AutoItV3Library:
 
         Win Get Process ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5842,7 +6057,7 @@ class AutoItV3Library:
 
         text(窗口文本)         [可选参数] 要读取的窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5850,19 +6065,19 @@ class AutoItV3Library:
 
         失败: 返回值为 -1.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Process Wait, Process Wait Close, Process List
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5878,15 +6093,16 @@ class AutoItV3Library:
 
         print("进程 PID 为", pid)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_get_process(title, text=_text)
 
-    def win_get_process_by_handle(self, handle):
+    @staticmethod
+    def win_get_process_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5894,13 +6110,13 @@ class AutoItV3Library:
 
         Win Get Process By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)        要读取的窗口句柄.参考 标题特殊定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5916,9 +6132,10 @@ class AutoItV3Library:
         """
         return autoit.win_get_process_by_handle(handle)
 
-    def win_get_state(self, title, **kwargs):
+    @staticmethod
+    def win_get_state(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -5926,7 +6143,7 @@ class AutoItV3Library:
 
         Win Get State ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -5934,7 +6151,7 @@ class AutoItV3Library:
 
         text(窗口文本)         [可选参数] 指定窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -5954,19 +6171,19 @@ class AutoItV3Library:
 
         失败: 返回值为0,并把 @error 设为 1,说明未找到目标窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         BitAND, Win Get Pos
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -5993,15 +6210,16 @@ class AutoItV3Library:
         else:
             print("例子", "记事本窗口不是最小化的")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_get_state(title, text=_text)
 
-    def win_get_state_by_handle(self, handle):
+    @staticmethod
+    def win_get_state_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6009,13 +6227,13 @@ class AutoItV3Library:
 
         Win Get State By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle(窗口句柄)        目标窗口句柄.参考标题特殊定义
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6043,9 +6261,10 @@ class AutoItV3Library:
         """
         return autoit.win_get_state_by_handle(handle)
 
-    def win_get_text(self, title, buf_size=256, **kwargs):
+    @staticmethod
+    def win_get_text(title, buf_size=256, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6053,7 +6272,7 @@ class AutoItV3Library:
 
         Win Get Text ( "窗口标题" [, buf_size=256 [, text="窗口文本"]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6063,7 +6282,7 @@ class AutoItV3Library:
 
         text(窗口文本)                   [可选参数] 指定窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6071,22 +6290,23 @@ class AutoItV3Library:
 
         失败: 返回0(如果没有匹配的标题).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        本函数最多能获得 64KB 的窗口文本.即使目标窗口被最小化 WinGetText 仍能正常工作,若要获得隐藏窗口的文本请先设置;AutoItSetOption("WinDetectHiddenText", 1)
+        本函数最多能获得 64KB 的窗口文本.即使目标窗口被最小化 WinGetText 仍能正常工作,
+        若要获得隐藏窗口的文本请先设置;AutoItSetOption("WinDetectHiddenText", 1)
         若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的文本.
 
         使用 WinGetText("[active]") 可获得当前激活窗口的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Get Title, Control Get Text, Win Get Class List
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6108,15 +6328,16 @@ class AutoItV3Library:
 
         print("读取的文本为:","读取到的文本为: " + text)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_get_text(title, buf_size, text=_text)
+        return autoit.win_get_text(title, int(buf_size), text=_text)
 
-    def win_get_text_by_handle(self, handle, buf_size=256):
+    @staticmethod
+    def win_get_text_by_handle(handle, buf_size=256):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6124,7 +6345,7 @@ class AutoItV3Library:
 
         Win Get Text By Handle ( "窗口句柄" [, buf_size=256] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6132,7 +6353,7 @@ class AutoItV3Library:
 
         buf_size (缓冲区大小)            [可选参数] 默认值为256.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6146,11 +6367,12 @@ class AutoItV3Library:
 
         用法参考Win Get Text
         """
-        return autoit.win_get_text_by_handle(handle, buf_size)
+        return autoit.win_get_text_by_handle(handle, int(buf_size))
 
-    def win_get_title(self, title, buf_size=256, **kwargs):
+    @staticmethod
+    def win_get_title(title, buf_size=256, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6158,7 +6380,7 @@ class AutoItV3Library:
 
         Win Get Title ( "窗口标题" [, buf_size=256 [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6168,7 +6390,7 @@ class AutoItV3Library:
 
         text(窗口文本)                    [可选参数] 指定窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6176,19 +6398,20 @@ class AutoItV3Library:
 
         失败: 返回 0 (如果没有匹配的标题).
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        Win Get Title("[active]") 将返回当前激活窗口的标题.Win Get Title 能对最小化窗口或隐藏窗口正常工作.若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的标题.
+        Win Get Title("[active]") 将返回当前激活窗口的标题.Win Get Title 能对最小化窗口或隐藏窗口正常工作.
+        若同时有多个窗口符合匹配条件则程序将获取最近被激活的窗口的标题.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         AutoItWinGetTitle, Win Get Text, Win Set Title
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6204,15 +6427,16 @@ class AutoItV3Library:
 
         print("完整的标题为:", title)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_get_title(title, buf_size, text=_text)
+        return autoit.win_get_title(title, int(buf_size), text=_text)
 
-    def win_get_title_by_handle(self, handle, buf_size=256):
+    @staticmethod
+    def win_get_title_by_handle(handle, buf_size=256):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6220,7 +6444,7 @@ class AutoItV3Library:
 
         Win Get Title By Handle ( "窗口句柄" [, buf_size=256 [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6228,7 +6452,7 @@ class AutoItV3Library:
 
         buf_size (缓冲区大小)             [可选参数] 默认值为256.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6242,11 +6466,12 @@ class AutoItV3Library:
 
         用法参考Win Get Title
         """
-        return autoit.win_get_title_by_handle(handle, buf_size)
+        return autoit.win_get_title_by_handle(handle, int(buf_size))
 
-    def win_kill(self, title, **kwargs):
+    @staticmethod
+    def win_kill(title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6254,7 +6479,7 @@ class AutoItV3Library:
 
         Win Kill ( "窗口标题" [, text="窗口文本"] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6262,25 +6487,27 @@ class AutoItV3Library:
 
         text（窗口文本）                 [可选参数] 指定需要关闭的窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
         无(无论成功与否总是返回1)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        本函数和 Win Close 的不同之处在于 Win Kill 在目标窗口未能被迅速关闭时强制性地终止该窗口.因此,用户将没有机会对原本可能会出现的对话框(提示用户保存数据)作出反应.尽管 WinKill 能对最小化窗口或隐藏窗口正常工作,但某些窗口(特别是资源管理器窗口)只能使用 Win Close 来关闭.
+        本函数和 Win Close 的不同之处在于 Win Kill 在目标窗口未能被迅速关闭时强制性地终止该窗口.
+        因此,用户将没有机会对原本可能会出现的对话框(提示用户保存数据)作出反应.
+        尽管 WinKill 能对最小化窗口或隐藏窗口正常工作,但某些窗口(特别是资源管理器窗口)只能使用 Win Close 来关闭.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Activate, Win Close, Win Set State, Process Close
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6298,15 +6525,16 @@ class AutoItV3Library:
 
         win_kill("[CLASS:Notepad]")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_kill(title, text=_text)
 
-    def win_kill_by_handle(self, handle):
+    @staticmethod
+    def win_kill_by_handle(handle):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6314,13 +6542,13 @@ class AutoItV3Library:
 
         Win Kill By Handle ( "窗口句柄" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         handle（窗口句柄）           目标窗口句柄.参考标题高级定义.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6334,17 +6562,19 @@ class AutoItV3Library:
         """
         return autoit.win_kill_by_handle(handle)
 
-    def win_menu_select_item(self, title, *items, **kwargs):
+    @staticmethod
+    def win_menu_select_item(title, *items, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
         调用窗口中的某个菜单项目.
 
-        Win Menu Select Item ( "窗口标题" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, text="窗口文本"]]]]]]] )
+        Win Menu Select Item ( "窗口标题" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [,
+                                "菜单项" [, "菜单项" [, text="窗口文本"]]]]]]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6366,7 +6596,7 @@ class AutoItV3Library:
 
         text(窗口文本)         [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6374,21 +6604,24 @@ class AutoItV3Library:
 
         失败: 返回值为0,说明未发现目标菜单项.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
-        注意,含有下划线的菜单项实际上是由一个 & 符号来指示下划线的位置的.因此,菜单项 File 或 文件( F ) 的对应文本应该是 "&File" 或 "文件(&F)", Convert 的对应文本则是 "Con&vert".您可以访问最深达六层菜单项;而且不用管目标窗口是否被激活/最小化/隐藏.
+        注意,含有下划线的菜单项实际上是由一个 & 符号来指示下划线的位置的.
+        因此,菜单项 File 或 文件( F ) 的对应文本应该是 "&File" 或 "文件(&F)", Convert 的对应文本则是 "Con&vert".
+        您可以访问最深达六层菜单项;而且不用管目标窗口是否被激活/最小化/隐藏.
 
-        WinMenuSelectItem 只能对标准菜单有效.不幸的是,目前有很多的菜单实际上都是程序员自己写的或者是用工具栏来"假装"成菜单的.即使是 Microsoft 的应用程序也有很多这样的.
+        WinMenuSelectItem 只能对标准菜单有效.不幸的是,目前有很多的菜单实际上都是程序员自己写的或者是用工具栏
+        来"假装"成菜单的.即使是 Microsoft 的应用程序也有很多这样的.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Control Command, Send
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6404,23 +6637,25 @@ class AutoItV3Library:
 
         win_menu_select_item("[CLASS:Notepad]", "文件(&F)", "页面设置(&U)..." )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_menu_select_item(title, *items, text=_text)
 
-    def win_menu_select_item_by_handle(self, handle, *items):
+    @staticmethod
+    def win_menu_select_item_by_handle(handle, *items):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
         根据句柄，调用窗口中的某个菜单项目.
 
-        Win Menu Select Item By Handle ( "窗口句柄" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项"]]]]]] )
+        Win Menu Select Item By Handle ( "窗口句柄" [, "菜单项" [, "菜单项" [, "菜单项" [, "菜单项" [,
+        "菜单项" [, "菜单项" [, "菜单项"]]]]]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6440,7 +6675,7 @@ class AutoItV3Library:
 
         *items(菜单项)         [可选参数] 子菜单项目的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6456,9 +6691,10 @@ class AutoItV3Library:
         """
         return autoit.win_menu_select_item_by_handle(handle, *items)
 
-    def win_minimize_all(self):
+    @staticmethod
+    def win_minimize_all():
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6466,31 +6702,31 @@ class AutoItV3Library:
 
         Win Minimize All ( )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         Send("#m") 也是一种可行办法.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Minimize All Undo, Win Set State
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6500,13 +6736,14 @@ class AutoItV3Library:
 
         win_minimize_all()
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         return autoit.win_minimize_all()
 
-    def win_minimize_all_undo(self):
+    @staticmethod
+    def win_minimize_all_undo():
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6514,31 +6751,31 @@ class AutoItV3Library:
 
         Win Minimize All Undo ( )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         Send("#+m") 也是一种可行办法.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         WinMinimizeAll, WinSetState
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6548,13 +6785,14 @@ class AutoItV3Library:
 
         win_minimize_all_undo()
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         return autoit.win_minimize_all_undo()
 
-    def win_move(self, title, x, y, width=-1, height=-1, **kwargs):
+    @staticmethod
+    def win_move(title, x, y, width=-1, height=-1, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6562,7 +6800,7 @@ class AutoItV3Library:
 
         Win Move ( "窗口标题", X坐标, Y坐标 [, 宽度 [, 高度 [, text="窗口文本"]]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6578,7 +6816,7 @@ class AutoItV3Library:
 
         text(窗口文本)      [可选参数]目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6586,14 +6824,16 @@ class AutoItV3Library:
 
         失败: 返回 0 (如果窗体不存在.)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         Win Move 对最小化窗口无效,但能对隐藏窗口正常工作.
 
-        若指定的宽度和高度过小(或者是负数)则窗口大小将不会小于 112 x 27(象素).若宽度和高度过大则窗口大小将不会大于 [12+@DesktopWidth] x [12+@DesktopHeight](象素,约值).
-        X坐标 和 Y 坐标可使用负数.事实上,您甚至可以把窗口移出屏幕;若该程序具有"记住上次位置"功能则下一次您运行该程序时窗口将在屏幕一角出现(并且是完全显示).
+        若指定的宽度和高度过小(或者是负数)则窗口大小将不会小于 112 x 27(象素).
+        若宽度和高度过大则窗口大小将不会大于 [12+@DesktopWidth] x [12+@DesktopHeight](象素,约值).
+        X坐标 和 Y 坐标可使用负数.事实上,您甚至可以把窗口移出屏幕;
+        若该程序具有"记住上次位置"功能则下一次您运行该程序时窗口将在屏幕一角出现(并且是完全显示).
 
         若同时有多个窗口符合匹配条件则程序将移动最近被激活的窗口.
 
@@ -6601,13 +6841,13 @@ class AutoItV3Library:
 
         那时速度用于直到改变窗口大小完成.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Activate, Win Close, Win Get Client Size, Win Get Pos, Win Set State
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6621,15 +6861,16 @@ class AutoItV3Library:
 
         win_move("[CLASS:Notepad]", 0, 0, 200, 200)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_move(title, x, y, width, height, text=_text)
+        return autoit.win_move(title, int(x), int(y), int(width), int(height), text=_text)
 
-    def win_move_by_handle(self, handle, x, y, width=-1, height=-1):
+    @staticmethod
+    def win_move_by_handle(handle, x, y, width=-1, height=-1):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6637,7 +6878,7 @@ class AutoItV3Library:
 
         Win Move By Handle ( "窗口句柄", X坐标, Y坐标 [, 宽度 [, 高度]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6651,7 +6892,7 @@ class AutoItV3Library:
 
         height(高度)       [可选参数] 窗口的新高度.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6665,11 +6906,12 @@ class AutoItV3Library:
 
         用法参考Win Move
         """
-        return autoit.win_move_by_handle(handle, x, y, width, height)
+        return autoit.win_move_by_handle(handle, int(x), int(y), int(width), int(height))
 
-    def win_set_on_top(self, title, flag=1, **kwargs):
+    @staticmethod
+    def win_set_on_top(title, flag=1, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6677,7 +6919,7 @@ class AutoItV3Library:
 
         Win Set On Top ( "窗口标题", 标志 [, text="窗口文本"])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6689,7 +6931,7 @@ class AutoItV3Library:
 
         text(窗口文本)       [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6697,19 +6939,19 @@ class AutoItV3Library:
 
         失败: 返回 0,窗口不存在.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         某些第三方程序带有"总是在顶层"的上下文菜单,AutoIt 更改其顶层窗口属性时其菜单项将不被更新.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Set State
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6723,15 +6965,16 @@ class AutoItV3Library:
 
         win_set_on_top("[CLASS:Notepad]", 1)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_set_on_top(title, flag, text=_text)
+        return autoit.win_set_on_top(title, int(flag), text=_text)
 
-    def win_set_on_top_by_handle(self, handle, flag=1):
+    @staticmethod
+    def win_set_on_top_by_handle(handle, flag=1):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6739,7 +6982,7 @@ class AutoItV3Library:
 
         Win Set On Top By Handle ( "窗口句柄", 标志)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6749,7 +6992,7 @@ class AutoItV3Library:
 
         1=设置为顶层窗口,0 = 取消顶层窗口属性
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6763,11 +7006,12 @@ class AutoItV3Library:
 
         用法参考Win Set On Top
         """
-        return autoit.win_set_on_top_by_handle(handle, flag)
+        return autoit.win_set_on_top_by_handle(handle, int(flag))
 
-    def win_set_state(self, title, flag=properties.SW_SHOW, **kwargs):
+    @staticmethod
+    def win_set_state(title, flag=properties.SW_SHOW, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6775,7 +7019,7 @@ class AutoItV3Library:
 
         Win Set State ( "窗口标题", 标志 [, text="窗口文本"])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6799,7 +7043,7 @@ class AutoItV3Library:
 
         text(窗口文本)       [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6807,7 +7051,7 @@ class AutoItV3Library:
 
         失败: 返回 0,窗口不存在.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
@@ -6815,13 +7059,14 @@ class AutoItV3Library:
 
         @SW_MINIMIZE 和 @SW_MAXIMIZE 对模块化对话框/窗口照样有效.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
-        Win Activate, Win Close, Control Hide, Win Flash, Win Kill, Win Minimize All, Win Minimize All Undo, Win Move, Win Set On Top
+        Win Activate, Win Close, Control Hide, Win Flash, Win Kill, Win Minimize All, Win Minimize All Undo,
+        Win Move, Win Set On Top
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6841,15 +7086,16 @@ class AutoItV3Library:
 
         win_set_state("[CLASS:Notepad]", 5)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_set_state(title, flag, text=_text)
+        return autoit.win_set_state(title, int(flag), text=_text)
 
-    def win_set_state_by_handle(self, handle, flag=properties.SW_SHOW):
+    @staticmethod
+    def win_set_state_by_handle(handle, flag=properties.SW_SHOW):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6857,7 +7103,7 @@ class AutoItV3Library:
 
         Win Set State By Handle ( "窗口句柄", 标志 )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6879,7 +7125,7 @@ class AutoItV3Library:
 
             @SW_ENABLE = 使窗口可用
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6893,11 +7139,12 @@ class AutoItV3Library:
 
         用法参考Win Set State
         """
-        return autoit.win_set_state_by_handle(handle, flag)
+        return autoit.win_set_state_by_handle(handle, int(flag))
 
-    def win_set_title(self, title, new_title, **kwargs):
+    @staticmethod
+    def win_set_title(title, new_title, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6905,7 +7152,7 @@ class AutoItV3Library:
 
         Win Set Title ( "窗口标题", "新标题" [, text="窗口文本"])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6915,7 +7162,7 @@ class AutoItV3Library:
 
         text(窗口文本)             [可选参数] 要修改的窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6923,19 +7170,19 @@ class AutoItV3Library:
 
         失败: 返回 0 ,窗口不存在.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         若同时有多个窗口符合匹配条件则程序将以最近被激活的窗口为目标.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         AutoItWinSetTitle, Win Get Title, Win Get Handle
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -6949,15 +7196,16 @@ class AutoItV3Library:
 
         win_set_title("[CLASS:Notepad]", "我新的记事本")
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
         return autoit.win_set_title(title, new_title, text=_text)
 
-    def win_set_title_by_handle(self, handle, new_title):
+    @staticmethod
+    def win_set_title_by_handle(handle, new_title):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6965,7 +7213,7 @@ class AutoItV3Library:
 
         Win Set Title By Handle ( "窗口句柄", "新标题" )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -6973,7 +7221,7 @@ class AutoItV3Library:
 
         new_title(新标题)          需要修改成的新标题.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -6989,9 +7237,10 @@ class AutoItV3Library:
         """
         return autoit.win_set_title_by_handle(handle, new_title)
 
-    def win_set_trans(self, title, trans, **kwargs):
+    @staticmethod
+    def win_set_trans(title, trans, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -6999,7 +7248,7 @@ class AutoItV3Library:
 
         Win Set Trans ( "窗口标题", 透明度 [, text="窗口文本"])
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -7009,7 +7258,7 @@ class AutoItV3Library:
 
         text(窗口文本)         [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7017,19 +7266,19 @@ class AutoItV3Library:
 
         失败: 返回值为 0, 若操作系统不支持本函数则 @error 将被设为1.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         仅支持 Windows 2000/XP 或更高版本,屏幕颜色必须高于或者等于16位.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         没有.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -7045,15 +7294,16 @@ class AutoItV3Library:
 
         win_set_trans("[CLASS:Notepad]", 170) # 让记事本半透明.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_set_trans(title, trans, text=_text)
+        return autoit.win_set_trans(title, int(trans), text=_text)
 
-    def win_set_trans_by_handle(self, handle, trans):
+    @staticmethod
+    def win_set_trans_by_handle(handle, trans):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7061,7 +7311,7 @@ class AutoItV3Library:
 
         Win Set Trans By Handle ( "窗口句柄", 透明度 )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -7069,7 +7319,7 @@ class AutoItV3Library:
 
         trans(透明度)          介于 0 到 255 之间的数值.数值越大则窗口越不透明. 255=不透明,0=不可见.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7083,11 +7333,12 @@ class AutoItV3Library:
 
         用法参考Win Set Trans
         """
-        return autoit.win_set_trans_by_handle(handle, trans)
+        return autoit.win_set_trans_by_handle(handle, int(trans))
 
-    def win_wait(self, title, timeout="0", **kwargs):
+    @staticmethod
+    def win_wait(title, timeout=0, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7095,7 +7346,7 @@ class AutoItV3Library:
 
         Win Wait ( "窗口标题" [, 超时时间 [, text="窗口文本"]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -7105,7 +7356,7 @@ class AutoItV3Library:
 
         text(窗口文本)              [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7113,19 +7364,19 @@ class AutoItV3Library:
 
         失败: 返回值为 0,说明已超时.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Active, Win Exists, Win Wait Active, Win Wait Close, Win Wait Not Active, Process Wait
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -7143,16 +7394,16 @@ class AutoItV3Library:
 
         win_wait("[CLASS:Notepad]", 5)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
-        timeout = int(timeout)  # 因为RobotFramework会将参数转换为str
         _text = kwargs.get("text", "")
 
-        return autoit.win_wait(title, timeout, text=_text)
+        return autoit.win_wait(title, int(timeout), text=_text)
 
-    def win_wait_by_handle(self, handle, timeout):
+    @staticmethod
+    def win_wait_by_handle(handle, timeout):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7160,7 +7411,7 @@ class AutoItV3Library:
 
         Win Wait By Handle ( "窗口句柄" [, 超时时间] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -7168,7 +7419,7 @@ class AutoItV3Library:
 
         timeout(超时时间)           [可选参数] 超时时间,以秒为单位.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7182,11 +7433,12 @@ class AutoItV3Library:
 
         用法参考Win Wait
         """
-        return autoit.win_wait_by_handle(handle, timeout)
+        return autoit.win_wait_by_handle(handle, int(timeout))
 
-    def win_wait_active(self, title, timeout=0, **kwargs):
+    @staticmethod
+    def win_wait_active(title, timeout=0, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7202,7 +7454,7 @@ class AutoItV3Library:
 
         text(窗口文本)              [可选参数] 要检查的窗口包含的文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7210,19 +7462,19 @@ class AutoItV3Library:
 
         失败: 返回值为 0,说明已超时.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         None.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Active, Win Exists, Win Wait, Win Wait Close, Win Wait Not Active, Process Wait
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -7240,15 +7492,16 @@ class AutoItV3Library:
 
         win_wait_active("[CLASS:Notepad]", 5)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_wait_active(title, timeout, text=_text)
+        return autoit.win_wait_active(title, int(timeout), text=_text)
 
-    def win_wait_active_by_handle(self, handle, timeout):
+    @staticmethod
+    def win_wait_active_by_handle(handle, timeout):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7262,7 +7515,7 @@ class AutoItV3Library:
 
         timeout(超时时间)           [可选参数] 超时时间,以秒为单位.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7276,11 +7529,12 @@ class AutoItV3Library:
 
         用法参考Win Wait Active
         """
-        return autoit.win_wait_active_by_handle(handle, timeout)
+        return autoit.win_wait_active_by_handle(handle, int(timeout))
 
-    def win_wait_close(self, title, timeout=0, **kwargs):
+    @staticmethod
+    def win_wait_close(title, timeout=0, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7296,7 +7550,7 @@ class AutoItV3Library:
 
         text(窗口文本)              [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7304,19 +7558,19 @@ class AutoItV3Library:
 
         失败: 返回值为0,说明已超时.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         若在调用本函数时目标窗口并不存在则立即返回1.脚本程序将每隔 250 毫秒 左右检查一次匹配窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Active, Win Exists, Win Wait, Win Wait Active, Win Wait Not Active, Process Wait Close
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -7336,15 +7590,16 @@ class AutoItV3Library:
 
         win_wait_close("[CLASS:Notepad]", 5)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_wait_close(title, timeout, text=_text)
+        return autoit.win_wait_close(title, int(timeout), text=_text)
 
-    def win_wait_close_by_handle(self, handle, timeout):
+    @staticmethod
+    def win_wait_close_by_handle(handle, timeout):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7358,7 +7613,7 @@ class AutoItV3Library:
 
         timeout(超时时间)           [可选参数] 超时时间,以秒为单位.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7372,11 +7627,12 @@ class AutoItV3Library:
 
         用法参考Win Wait Close
         """
-        return autoit.win_wait_close_by_handle(handle, timeout)
+        return autoit.win_wait_close_by_handle(handle, int(timeout))
 
-    def win_wait_not_active(self, title, timeout=0, **kwargs):
+    @staticmethod
+    def win_wait_not_active(title, timeout=0, **kwargs):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7384,7 +7640,7 @@ class AutoItV3Library:
 
         Win Wait Not Active ( "窗口标题"  [, 超时时间 [, text="窗口文本"]] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -7394,7 +7650,7 @@ class AutoItV3Library:
 
         text(窗口文本)            [可选参数] 目标窗口文本.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7402,19 +7658,19 @@ class AutoItV3Library:
 
         失败: 返回 0,已经超时.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [注意/说明]
 
         脚本程序将每隔 250 毫秒 左右检查一次匹配窗口.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [相关]
 
         Win Active, Win Exists, Win Wait, Win Wait Active, Win Wait Close
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [示例/演示]
 
@@ -7434,15 +7690,16 @@ class AutoItV3Library:
 
         win_wait_not_active("[CLASS:Notepad]", 5)
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
         """
         _text = kwargs.get("text", "")
 
-        return autoit.win_wait_not_active(title, timeout, text=_text)
+        return autoit.win_wait_not_active(title, int(timeout), text=_text)
 
-    def win_wait_not_active_by_handle(self, handle, timeout):
+    @staticmethod
+    def win_wait_not_active_by_handle(handle, timeout):
         """
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [描述]
 
@@ -7450,7 +7707,7 @@ class AutoItV3Library:
 
         Win Wait Not Active By Handle ( "窗口句柄"  [, 超时时间] )
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [参数]
 
@@ -7458,7 +7715,7 @@ class AutoItV3Library:
 
         timeout(超时时间)         [可选参数] 超时时间,以秒为单位.
 
-        -----------------------------------------------------------------------------------------------------------------
+        ----------------------------------------------------------------------------------------------------------------
 
         [返回值]
 
@@ -7472,10 +7729,10 @@ class AutoItV3Library:
 
         用法参考Win Wait Not Active
         """
-        return autoit.win_wait_not_active_by_handle(handle, timeout)
+        return autoit.win_wait_not_active_by_handle(handle, int(timeout))
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     print("本模块只是引用PyAutoIt模块，将它封装成中文版的接口，方便不熟悉英文的用户使用。\n\
     PyAutoIt模块依赖pywin32，因此安装本模块的顺序是：\n\
     1.安装pywin32；\n\
