@@ -9,8 +9,8 @@ def get_wifi_pwd():
     获取/data/misc/wifi/wpa_supplicant.conf的wifi名称和密码，返回以[(ssid,psk)]组成的列表,
     如果没有密码，则返回None
     """
-    # output = os.popen("su -c 'cat /data/misc/wifi/wpa_supplicant.conf'")
-    output = open("wpa_supplicant.conf", "r")
+    output = os.popen("su -c 'cat /data/misc/wifi/wpa_supplicant.conf'")
+    # output = open("wpa_supplicant.conf", "r")
     pwa_text = output.read()
 
     ssid = re.findall("\Wssid.*", pwa_text)
