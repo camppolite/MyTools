@@ -6,40 +6,33 @@ import re
 
 def get_wifi_pwd():
     """
-    获取/data/misc/wifi/wpa_supplicant.conf的wifi名称和密码，返回以{({ssid:''},{psk:''})}组成的字典
+    获取/data/misc/wifi/wpa_supplicant.conf的wifi名称和密码，返回以[(ssid,psk)]组成的列表,
+    如果没有密码，则返回None
     """
-    output = os.popen("su -c 'cat /data/misc/wifi/wpa_supplicant.conf'")
-    # output = open("wpa_supplicant.conf", "r")
+    # output = os.popen("su -c 'cat /data/misc/wifi/wpa_supplicant.conf'")
+    output = open("wpa_supplicant.conf", "r")
     pwa_text = output.read()
 
-    ssid = re.findall("\s+ssid.*", pwa_text)
-    psk = re.findall("\s+psk.*", pwa_text)
-
+    ssid = re.findall("\Wssid.*", pwa_text)
+    psk = re.findall("\Wpsk.*", pwa_text)
+    if not ssid or not psk:
+        return None
     for i in range(len(ssid)):
-        ssid[i] = ssid[i].lstrip()
-        key, value = ssid[i].split("=")
-        dic = dict()
-        dic[key] = value.lstrip('\"').rstrip('\"')
-        ssid[i] = dic
+        ssid[i] = re.sub('\tssid=', '', ssid[i])
+        ssid[i] = re.sub('^"', '', ssid[i])
+        ssid[i] = re.sub('"$', '', ssid[i])
     for i in range(len(psk)):
-        psk[i] = psk[i].lstrip()
-        key, value = psk[i].split("=")
-        dic = dict()
-        dic[key] = value.lstrip('\"').rstrip('\"')
-        psk[i] = dic
+        psk[i] = re.sub('\tpsk=', '', psk[i])
+        psk[i] = re.sub('^"', '', psk[i])
+        psk[i] = re.sub('"$', '', psk[i])
 
-    list1 = list(zip(ssid, psk))
-    length = len(list1)
-    list2 = [i for i in range(length)]
-    wifi_pwd = {}
-    for i in range(length):
-        wifi_pwd[list2[i]] = list1[i]
-
-    return wifi_pwd
+    return list(zip(ssid, psk))
 
 
 if __name__ == '__main__':
     pwd = get_wifi_pwd()
-    print(pwd)
-    print(pwd[0][0]['ssid'])
-    print(pwd[0][1]['psk'])
+    if pwd:
+        for key, value in pwd:
+            print(key, value)
+    else:
+        print("没有密码")
