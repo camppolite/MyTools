@@ -1,4 +1,4 @@
-# !/usr/bin/python
+﻿# !/usr/bin/python
 # -*- coding: utf-8 -*-
 
 __author__ = 'Wu Dirui'
@@ -479,8 +479,8 @@ if __name__ == '__main__':
         from tkinter import messagebox
     except ImportError:
         import Tkinter as tk
-        from Tkinter import filedialog
-        from Tkinter import messagebox
+        import tkFileDialog as filedialog
+        import tkMessageBox as messagebox
 
     class Application(tk.Frame):
         def __init__(self, master=None):
@@ -495,8 +495,8 @@ if __name__ == '__main__':
             # 得到屏幕宽度
             sh = self.master.winfo_screenheight()
             # 得到屏幕高度
-            ww = 350
-            wh = 600
+            ww = 550
+            wh = 700
             # 窗口宽高为100
             x = (sw - ww) / 2
             y = (sh - wh) / 2
@@ -536,9 +536,17 @@ if __name__ == '__main__':
             self.msg_sync_send_entry.grid(column=1, row=1, columnspan=3)
             self.msg_sync_send_entry.insert(0, "senderrolehandler.cpp")
 
+            self.msg_sync_topic_label = tk.Label(self.msg_sync_frame, text='主题:')
+            self.msg_sync_topic_label.grid(column=4, row=1)
+
+            self.msg_sync_topic = str()
+            self.msg_sync_topic_entry = tk.Entry(self.msg_sync_frame, textvariable=self.msg_sync_topic)
+            self.msg_sync_topic_entry.grid(column=5, row=1)
+            self.msg_sync_topic_entry.insert(0, "topic")
+
             self.msg_sync_send_btn = tk.Button(self.msg_sync_frame, text="选择文件",
                                                command=self.set_msg_sync_send_file)
-            self.msg_sync_send_btn.grid(column=4, row=1)
+            self.msg_sync_send_btn.grid(column=6, row=1)
 
             self.msg_sync_recv_btn = tk.Label(self.msg_sync_frame, text="选择接收方cpp文件")
             self.msg_sync_recv_btn.grid(column=0, row=3)
@@ -550,7 +558,7 @@ if __name__ == '__main__':
 
             self.msg_sync_recv_btn = tk.Button(self.msg_sync_frame, text="选择文件",
                                                command=self.set_msg_sync_recv_file)
-            self.msg_sync_recv_btn.grid(column=4, row=3)
+            self.msg_sync_recv_btn.grid(column=6, row=3)
 
         def msg_asnyc(self):
             self.msg_async_frame = tk.Frame(self.master, borderwidth=5, relief="ridge")
@@ -753,71 +761,85 @@ if __name__ == '__main__':
         def set_msg_sync_send_file(self):
             self.msg_sync_send_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.msg_sync_send_file:
+                self.msg_sync_send_entry.delete(0, tk.END)
                 self.msg_sync_send_entry.insert(0, self.msg_sync_send_file)
 
         def set_msg_sync_recv_file(self):
             self.msg_sync_recv_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.msg_sync_recv_file:
+                self.msg_sync_recv_entry.delete(0, tk.END)
                 self.msg_sync_recv_entry.insert(0, self.msg_sync_send_file)
 
         def set_msg_async_send_h_file(self):
             self.msg_async_send_h_file = filedialog.askopenfilename(filetypes=[("h files", "*.h")])
             if self.msg_async_send_h_file:
+                self.msg_async_send_h_entry.delete(0, tk.END)
                 self.msg_async_send_h_entry.insert(0, self.msg_async_send_h_file)
 
         def set_msg_async_send_cpp_file(self):
             self.msg_async_send_cpp_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.msg_async_send_cpp_file:
+                self.msg_async_send_cpp_entry.delete(0, tk.END)
                 self.msg_async_send_cpp_entry.insert(0, self.msg_async_send_cpp_file)
 
         def set_msg_async_send_xml_file(self):
             self.msg_async_send_xml_file = filedialog.askopenfilename(filetypes=[("xml files", "*.xml")])
             if self.msg_async_send_xml_file:
+                self.msg_async_send_xml_entry.delete(0, tk.END)
                 self.msg_async_send_xml_entry.insert(0, self.msg_async_send_xml_file)
 
         def set_msg_async_recv_h_file(self):
             self.msg_async_recv_h_file = filedialog.askopenfilename(filetypes=[("h files", "*.h")])
             if self.msg_async_recv_h_file:
+                self.msg_async_recv_h_entry.delete(0, tk.END)
                 self.msg_async_recv_h_entry.insert(0, self.msg_async_recv_h_file)
 
         def set_msg_async_recv_cpp_file(self):
             self.msg_async_recv_cpp_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.msg_async_recv_cpp_file:
+                self.msg_async_recv_cpp_entry.delete(0, tk.END)
                 self.msg_async_recv_cpp_entry.insert(0, self.msg_async_recv_cpp_file)
 
         def set_msg_async_recv_xml_file(self):
             self.msg_async_recv_xml_file = filedialog.askopenfilename(filetypes=[("xml files", "*.xml")])
             if self.msg_async_recv_xml_file:
+                self.msg_async_recv_xml_entry.delete(0, tk.END)
                 self.msg_async_recv_xml_entry.insert(0, self.msg_async_recv_xml_file)
 
         def set_srv_reg_name_file(self):
             self.srv_reg_name_file = filedialog.askopenfilename(filetypes=[("h files", "*.h")])
             if self.srv_reg_name_file:
+                self.srv_reg_name_entry.delete(0, tk.END)
                 self.srv_reg_name_entry.insert(0, self.srv_reg_name_file)
 
         def set_srv_reg_classname_file(self):
             self.srv_reg_classname_file = filedialog.askopenfilename(filetypes=[("h files", "*.h")])
             if self.srv_reg_classname_file:
+                self.srv_reg_classname_entry.delete(0, tk.END)
                 self.srv_reg_classname_entry.insert(0, self.srv_reg_classname_file)
 
         def set_srv_dll_get_file(self):
             self.srv_dll_get_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.srv_dll_get_file:
+                self.srv_dll_get_entry.delete(0, tk.END)
                 self.srv_dll_get_entry.insert(0, self.srv_dll_get_file)
 
         def set_srv_exe_get_file(self):
             self.srv_exe_get_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.srv_exe_get_file:
+                self.srv_exe_get_entry.delete(0, tk.END)
                 self.srv_exe_get_entry.insert(0, self.srv_exe_get_file)
 
         def set_event_sync_file(self):
             self.event_sync_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.event_sync_file:
+                self.event_sync_entry.delete(0, tk.END)
                 self.event_sync_entry.insert(0, self.event_sync_file)
 
         def set_event_async_file(self):
             self.event_async_file = filedialog.askopenfilename(filetypes=[("cpp files", "*.cpp")])
             if self.event_async_file:
+                self.event_async_entry.delete(0, tk.END)
                 self.event_async_entry.insert(0, self.event_async_file)
 
         def on_finish(self):
@@ -825,8 +847,8 @@ if __name__ == '__main__':
             error = None
 
             try:
-                if self.msg_sync_send_file:
-                    modify.modify_msgadmin_sync_sender_cpp_v1(self.msg_sync_send_file)
+                if self.msg_sync_send_file and self.msg_sync_topic:
+                    modify.modify_msgadmin_sync_sender_cpp_v1(self.msg_sync_send_file, self.msg_sync_topic)
             except IOError as e:
                 error += str(e)
 
