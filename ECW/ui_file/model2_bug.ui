@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>824</width>
+    <height>576</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="1" colspan="2">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>问题报告单</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3" colspan="2">
+         <widget class="QComboBox" name="combox_tablename"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>问题标识</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="combox_bugID"/>
+        </item>
+        <item row="1" column="2" colspan="2">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>用例编号</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QComboBox" name="combox_caseID"/>
+        </item>
+        <item row="1" column="5">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>项目名称</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="6" colspan="2">
+         <widget class="QComboBox" name="combox_projectname"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>报告日期</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="combox_bugdate"/>
+        </item>
+        <item row="2" column="2" colspan="2">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>报告人</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="4">
+         <widget class="QComboBox" name="combox_bugowner"/>
+        </item>
+        <item row="2" column="5">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>程序/文档名</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="6" colspan="2">
+         <widget class="QComboBox" name="combox_version"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>问题类别</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" colspan="7">
+         <widget class="QComboBox" name="combox_bugclass"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>问题级别</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1" colspan="7">
+         <widget class="QComboBox" name="combox_buglevel"/>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_10">
+          <property name="text">
+           <string>问题描述</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1" colspan="7">
+         <widget class="QComboBox" name="combox_bugdescrip"/>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_11">
+          <property name="text">
+           <string>修改意见</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1" colspan="7">
+         <widget class="QComboBox" name="combox_bugexpect"/>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>设计师意见</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="1" colspan="7">
+         <widget class="QComboBox" name="combox_fixed"/>
+        </item>
+        <item row="8" column="5" colspan="2">
+         <widget class="QLabel" name="label_13">
+          <property name="text">
+           <string>设计师签名</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="7">
+         <widget class="QComboBox" name="combox_sign"/>
+        </item>
+        <item row="9" column="6">
+         <widget class="QLabel" name="label_14">
+          <property name="text">
+           <string>日期</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="7">
+         <widget class="QComboBox" name="combox_signdate"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

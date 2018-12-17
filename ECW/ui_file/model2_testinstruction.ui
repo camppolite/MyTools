@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>482</width>
+    <height>441</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>表格名称</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2" colspan="3">
+       <widget class="QComboBox" name="combox_tablename"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>测试用例名称</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QComboBox" name="combox_casename"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>用例标识</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" colspan="2">
+       <widget class="QComboBox" name="combox_caseID"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>需求追踪</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="5">
+       <widget class="QComboBox" name="combox_requirement"/>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>先决条件</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" colspan="5">
+       <widget class="QComboBox" name="combox_condition"/>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>测试用例综述</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="5">
+       <widget class="QComboBox" name="combox_casetext"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_32">
+        <property name="text">
+         <string>测试数据</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1" colspan="5">
+       <widget class="QComboBox" name="combox_testdata"/>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>通过准则</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1" colspan="5">
+       <widget class="QComboBox" name="combox_passcondition"/>
+      </item>
+      <item row="7" column="0" colspan="6">
+       <widget class="QLabel" name="label_8">
+        <property name="text">
+         <string>测试步骤</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_9">
+        <property name="text">
+         <string>序号</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="1">
+       <widget class="QLabel" name="label_input">
+        <property name="text">
+         <string>输入及操作</string>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="5">
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>期望结果</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="label_27">
+        <property name="text">
+         <string>1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1" colspan="2">
+       <widget class="QComboBox" name="combox_input"/>
+      </item>
+      <item row="9" column="3" colspan="3">
+       <widget class="QComboBox" name="combox_expect"/>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="label_33">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;。&lt;/p&gt;&lt;p&gt;。&lt;/p&gt;&lt;p&gt;。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QLabel" name="label_54">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;。&lt;/p&gt;&lt;p&gt;。&lt;/p&gt;&lt;p&gt;。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="5">
+       <widget class="QLabel" name="label_55">
+        <property name="text">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;。&lt;/p&gt;&lt;p&gt;。&lt;/p&gt;&lt;p&gt;。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="label_30">
+        <property name="text">
+         <string>设计人员</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1" colspan="5">
+       <widget class="QComboBox" name="combox_testman"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

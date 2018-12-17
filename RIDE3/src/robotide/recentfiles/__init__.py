@@ -1,0 +1,1 @@
+from .recentfiles import RecentFilesPlugin
