@@ -143,13 +143,12 @@ if __name__ == '__main__':
     # 批量生成多个插件
     for i in range(quantity):
         newname = dllpluginname + str(i)
-        file_pro.write("SUBDIRS += " + newname + "\n")  # 生成pro要包含的插件名称
         shutil.copytree(srcpluginname, "plugins/" + newname)  # 拷贝文件夹
 
         replaceplugnname(srcpluginname, newname, plugintype="dll")
 
         plug_xml = "plugins/" + newname + "/" + "plug.xml"
-
         replacexmlattrib(plug_xml)
 
+        file_pro.write("SUBDIRS += " + newname + "\n")  # 生成pro要包含的插件名称
     file_pro.close()
