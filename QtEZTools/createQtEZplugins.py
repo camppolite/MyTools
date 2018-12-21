@@ -87,46 +87,80 @@ def replacexmlattrib(xml):
     root = tree.getroot()
 
     backboradExtData = root.find(".//*[@extendPoint='qtez.mainwindow.pad.backboard']")
-    backboradExtDataID = backboradExtData.attrib["id"] + str(i)
-    backboradExtData.set("id", backboradExtDataID)
+    try:
+        backboradExtDataID = backboradExtData.attrib["id"] + str(i)
+        backboradExtData.set("id", backboradExtDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     BackBoardData = root.find(".//*[@key='BackBoard']")
-    BackBoardDataID = BackBoardData.attrib["id"] + str(i)
-    BackBoardDataTitle = BackBoardData.attrib["title"] + str(i)
-    BackBoardData.set("id", BackBoardDataID)
-    BackBoardData.set("title", BackBoardDataTitle)
+    try:
+        BackBoardDataID = BackBoardData.attrib["id"] + str(i)
+        BackBoardData.set("id", BackBoardDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+    try:
+        BackBoardDataTitle = BackBoardData.attrib["title"] + str(i)
+        BackBoardData.set("title", BackBoardDataTitle)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     floatingwindowExtData = root.find(".//*[@extendPoint='qtez.mainwindow.pad.floatingwindow']")
-    floatingwindowExtDataID = floatingwindowExtData.attrib["id"] + str(i)
-    floatingwindowExtData.set("id", floatingwindowExtDataID)
+    try:
+        floatingwindowExtDataID = floatingwindowExtData.attrib["id"] + str(i)
+        floatingwindowExtData.set("id", floatingwindowExtDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     FloatingWindowData = root.find(".//*[@key='FloatingWindow']")
-    FloatingWindowDataID = FloatingWindowData.attrib["id"] + str(i)
-    FloatingWindowDataTitle = FloatingWindowData.attrib["title"] + str(i)
-    FloatingWindowData.set("id", FloatingWindowDataID)
-    FloatingWindowData.set("title", FloatingWindowDataTitle)
+    try:
+        FloatingWindowDataID = FloatingWindowData.attrib["id"] + str(i)
+        FloatingWindowData.set("id", FloatingWindowDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+    try:
+        FloatingWindowDataTitle = FloatingWindowData.attrib["title"] + str(i)
+        FloatingWindowData.set("title", FloatingWindowDataTitle)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     navigationExtData = root.find(".//*[@extendPoint='qtez.mainwindow.pad.navigation']")
-    navigationExtDataID = navigationExtData.attrib["id"] + str(i)
-    navigationExtData.set("id", navigationExtDataID)
+    try:
+        navigationExtDataID = navigationExtData.attrib["id"] + str(i)
+        navigationExtData.set("id", navigationExtDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+
 
     NavigationMenuData = root.find(".//*[@key='NavigationMenu']")
-    NavigationMenuDataID = NavigationMenuData.attrib["id"] + str(i)
-    NavigationMenuDataName = NavigationMenuData.attrib["name"] + str(i)
-    NavigationMenuData.set("id", NavigationMenuDataID)
-    NavigationMenuData.set("name", NavigationMenuDataName)
+    try:
+        NavigationMenuDataID = NavigationMenuData.attrib["id"] + str(i)
+        NavigationMenuData.set("id", NavigationMenuDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+    try:
+        NavigationMenuDataName = NavigationMenuData.attrib["name"] + str(i)
+        NavigationMenuData.set("name", NavigationMenuDataName)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     NavigationActionData = root.find(".//*[@key='NavigationAction']")
-    NavigationActionDataID = NavigationActionData.attrib["id"] + str(i)
-    NavigationActionDataName = NavigationActionData.attrib["name"] + str(i)
-    NavigationActionData.set("id", NavigationActionDataID)
-    NavigationActionData.set("name", NavigationActionDataName)
+    try:
+        NavigationActionDataID = NavigationActionData.attrib["id"] + str(i)
+        NavigationActionData.set("id", NavigationActionDataID)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+    try:
+        NavigationActionDataName = NavigationActionData.attrib["name"] + str(i)
+        NavigationActionData.set("name", NavigationActionDataName)
+    except AttributeError as e:
+        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     tree.write(xml, encoding="utf-8")
 
 
 if __name__ == '__main__':
-    srcpluginname = "plugin001"  # 原始插件名
+    srcpluginname = "plugin001"  # 原始插件文件夹,必须存在，可以是相对路径和绝对路径
     quantity = 257  # 插件数量
 
     file_pro = open("plugins.pro", "r+")
@@ -151,4 +185,6 @@ if __name__ == '__main__':
         replacexmlattrib(plug_xml)
 
         file_pro.write("SUBDIRS += " + newname + "\n")  # 生成pro要包含的插件名称
+
+        print("生成%s插件成功。" % newname)
     file_pro.close()
