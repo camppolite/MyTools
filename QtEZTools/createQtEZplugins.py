@@ -86,50 +86,52 @@ def replacexmlattrib(xml):
     tree = ET.parse(xml)
     root = tree.getroot()
 
+    # 目前解析只针对不存在重复扩展点实现的xml
+
     backboradExtData = root.find(".//*[@extendPoint='qtez.mainwindow.pad.backboard']")
     try:
         backboradExtDataID = backboradExtData.attrib["id"] + str(i)
         backboradExtData.set("id", backboradExtDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     BackBoardData = root.find(".//*[@key='BackBoard']")
     try:
         BackBoardDataID = BackBoardData.attrib["id"] + str(i)
         BackBoardData.set("id", BackBoardDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
     try:
         BackBoardDataTitle = BackBoardData.attrib["title"] + str(i)
         BackBoardData.set("title", BackBoardDataTitle)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     floatingwindowExtData = root.find(".//*[@extendPoint='qtez.mainwindow.pad.floatingwindow']")
     try:
         floatingwindowExtDataID = floatingwindowExtData.attrib["id"] + str(i)
         floatingwindowExtData.set("id", floatingwindowExtDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     FloatingWindowData = root.find(".//*[@key='FloatingWindow']")
     try:
         FloatingWindowDataID = FloatingWindowData.attrib["id"] + str(i)
         FloatingWindowData.set("id", FloatingWindowDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
     try:
         FloatingWindowDataTitle = FloatingWindowData.attrib["title"] + str(i)
         FloatingWindowData.set("title", FloatingWindowDataTitle)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     navigationExtData = root.find(".//*[@extendPoint='qtez.mainwindow.pad.navigation']")
     try:
         navigationExtDataID = navigationExtData.attrib["id"] + str(i)
         navigationExtData.set("id", navigationExtDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
 
     NavigationMenuData = root.find(".//*[@key='NavigationMenu']")
@@ -137,24 +139,24 @@ def replacexmlattrib(xml):
         NavigationMenuDataID = NavigationMenuData.attrib["id"] + str(i)
         NavigationMenuData.set("id", NavigationMenuDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
     try:
         NavigationMenuDataName = NavigationMenuData.attrib["name"] + str(i)
         NavigationMenuData.set("name", NavigationMenuDataName)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     NavigationActionData = root.find(".//*[@key='NavigationAction']")
     try:
         NavigationActionDataID = NavigationActionData.attrib["id"] + str(i)
         NavigationActionData.set("id", NavigationActionDataID)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
     try:
         NavigationActionDataName = NavigationActionData.attrib["name"] + str(i)
         NavigationActionData.set("name", NavigationActionDataName)
     except AttributeError as e:
-        print("xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
+        print("警告：xml某些属性没找到，但是不影响生成。错误信息：%s" % e)
 
     tree.write(xml, encoding="utf-8")
 
