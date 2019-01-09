@@ -16,14 +16,14 @@ print("kill process:", p.communicate()[0].decode("utf-8"))
 
 def fun1():
     name = "getserver"
-    for i in range(1,1000):
+    for i in range(1,10):
         p = subprocess.Popen("TASKKILL /IM  %s /F" % (name + str(i) + ".exe"), shell=True, stdout=subprocess.PIPE)
         print("kill process:", p.communicate()[0].decode("utf-8"))
 
 
 def fun2():
     name = "servers"
-    for i in range(1,1000):
+    for i in range(1,10):
         p = subprocess.Popen("TASKKILL /IM  %s /F" % (name + str(i) + ".exe"), shell=True, stdout=subprocess.PIPE)
         print("kill process:", p.communicate()[0].decode("utf-8"))
 
