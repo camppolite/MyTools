@@ -3,4 +3,5 @@ import os
 file_dir = os.getcwd()
 for root, dirs, files in os.walk(file_dir):  
     for file in files:
-        print(file) #╣╠г╟б╥╬╤обкЫсп╥гд©б╪вснд╪Ч  
+        if file.endswith(".cpp"):
+            print(file + " \\") #Е╫⌠Е┴█Х╥╞Е╬└Д╦▀Ф┴─Ф°┴И²·Г⌡╝Е╫∙Е╜░Ф√┤Д╩╤  
