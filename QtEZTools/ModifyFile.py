@@ -99,11 +99,11 @@ class ModifyFile:
                 if index == 12:
                     # 在开头增加内容
                     f.write('#include <QFile>\n')
-                if index == 171:
+                if index == 150:
                     # 在getServices函数里的foreach循环里增加内容
                     f.write('            m_IMessageBox_WarningMessageBox = qobject_cast<IMessageBox*>'
                             '(reg.getService());\n')
-                    f.write('            QString msg = QString("%1: {first}").arg(proxy->symbolic());\n'.
+                    f.write('            QString msg = QString("%1: {first}").arg(m_proxy->symbolic());\n'.
                             format(first=self.getservice_dll))
                     f.write('            int ret = m_IMessageBox_WarningMessageBox->show(msg);\n')
                     f.write('            QFile file("{servicefile}");\n'.format(servicefile=self.servicefile))
@@ -136,10 +136,10 @@ class ModifyFile:
                 if index == 12:
                     # 在开头增加内容
                     f.write('#include <QFile>\n')
-                if index == 171:
+                if index == 150:
                     # 在getServices函数里的foreach循环里增加内容
                     f.write('            int ret = 0;\n')
-                    f.write('            QString msg = QString("%1: {first}").arg(proxy->symbolic());\n'.
+                    f.write('            QString msg = QString("%1: {first}").arg(m_proxy->symbolic());\n'.
                             format(first=self.getservice_exe))
                     f.write('            reg.callInterface("show", QtEZ_RETURN_ARG(int, ret),'
                             'QtEZ_ARG(QString, msg));\n')
