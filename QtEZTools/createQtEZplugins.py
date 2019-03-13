@@ -162,8 +162,8 @@ def replacexmlattrib(xml):
 
 
 if __name__ == '__main__':
-    srcpluginname = "plugin001"  # 原始插件文件夹,必须存在，可以是相对路径和绝对路径
-    quantity = 257  # 插件数量
+    srcpluginname = "com.yourcompany.pluginname"  # 原始插件文件夹,必须存在，可以是相对路径和绝对路径
+    quantity = 65  # 插件数量
 
     file_pro = open("plugins.pro", "r+")
     content_plgs = file_pro.read()
@@ -171,7 +171,7 @@ if __name__ == '__main__':
     file_pro.seek(0)
     file_pro.truncate()
 
-    dllpluginname = "dll.mypluginname"
+    dllpluginname = "pluginnamezichajian"
     exepluginname = "exe.mypluginname"
 
     shutil.rmtree("plugins", ignore_errors=True)

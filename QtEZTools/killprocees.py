@@ -40,4 +40,7 @@ print("kill process:")
 #t2.start()
 #t1.join()
 #t2.join()
+for i in range(0,25):
+   subprocess.Popen("TASKKILL /IM  %s /F" % ("exe.mypluginname" + str(i) + ".exe"), shell=True, stdout=subprocess.PIPE)
 
+subprocess.Popen("TASKKILL /IM  %s /F" % "plugin.exe.lazy.exe", shell=True, stdout=subprocess.PIPE)
